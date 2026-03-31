@@ -2,6 +2,9 @@
 
 This repository is a small GraphQL server implementation using Apollo Server and MongoDB. It includes implemented models, schema, resolvers, a seed script, and simple JWT-based auth helpers.
 
+<img width="1440" height="1312" alt="image" src="https://github.com/user-attachments/assets/0c7c135b-1d9e-4488-adb5-15fe5ee2c2ad" />
+
+
 Project highlights
 - `src/index.js` — application entry. Loads environment variables (`dotenv`), connects to MongoDB, and starts Apollo Server.
 - `src/db/connect.js` — MongoDB connection helper using `mongoose` and `process.env.MONGO_URI`.
