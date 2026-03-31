@@ -3,8 +3,8 @@ import { GAME_FIELDS } from './queries';
 
 export const ADD_GAME = gql`
   ${GAME_FIELDS}
-  mutation AddGame($title: String!, $year: Int!, $studioId: ID!, $genres: [String!]) {
-    addGame(title: $title, year: $year, studioId: $studioId, genres: $genres) {
+  mutation AddGame($title: String!, $year: Int!, $studioId: ID!, $genres: [String!], $imageUrl: String) {
+    addGame(title: $title, year: $year, studioId: $studioId, genres: $genres, imageUrl: $imageUrl) {
       ...GameFields
     }
   }

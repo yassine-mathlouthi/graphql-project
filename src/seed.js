@@ -26,41 +26,41 @@ async function seed() {
   // --- Games ---
   const games = await Game.insertMany([
     // Nintendo
-    { title: 'Breath of the Wild',      year: 2017, studio: nintendo._id,      genres: ['Adventure', 'RPG', 'Open World'] },
-    { title: 'Tears of the Kingdom',    year: 2023, studio: nintendo._id,      genres: ['Adventure', 'RPG', 'Open World'] },
-    { title: 'Super Mario Odyssey',     year: 2017, studio: nintendo._id,      genres: ['Platformer', 'Adventure'] },
-    { title: 'Mario Kart 8 Deluxe',     year: 2017, studio: nintendo._id,      genres: ['Racing', 'Multiplayer'] },
+    { title: 'Breath of the Wild',      year: 2017, studio: nintendo._id,      genres: ['Adventure', 'RPG', 'Open World'],   imageUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c6/The_Legend_of_Zelda_Breath_of_the_Wild.jpg' },
+    { title: 'Tears of the Kingdom',    year: 2023, studio: nintendo._id,      genres: ['Adventure', 'RPG', 'Open World'],   imageUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg' },
+    { title: 'Super Mario Odyssey',     year: 2017, studio: nintendo._id,      genres: ['Platformer', 'Adventure'],          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg' },
+    { title: 'Mario Kart 8 Deluxe',     year: 2017, studio: nintendo._id,      genres: ['Racing', 'Multiplayer'],            imageUrl: 'https://upload.wikimedia.org/wikipedia/en/b/b5/Mario_Kart_8.jpg' },
 
     // CD Projekt Red
-    { title: 'The Witcher 3',           year: 2015, studio: cdpr._id,          genres: ['RPG', 'Open World'] },
-    { title: 'Cyberpunk 2077',          year: 2020, studio: cdpr._id,          genres: ['RPG', 'Action', 'Open World'] },
+    { title: 'The Witcher 3',           year: 2015, studio: cdpr._id,          genres: ['RPG', 'Open World'],                imageUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg' },
+    { title: 'Cyberpunk 2077',          year: 2020, studio: cdpr._id,          genres: ['RPG', 'Action', 'Open World'],      imageUrl: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg' },
 
     // Rockstar Games
-    { title: 'Red Dead Redemption 2',   year: 2018, studio: rockstar._id,      genres: ['Action', 'Adventure', 'Open World'] },
-    { title: 'GTA V',                   year: 2013, studio: rockstar._id,      genres: ['Action', 'Open World', 'Multiplayer'] },
+    { title: 'Red Dead Redemption 2',   year: 2018, studio: rockstar._id,      genres: ['Action', 'Adventure', 'Open World'],imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/44/Red_Dead_Redemption_II.jpg' },
+    { title: 'GTA V',                   year: 2013, studio: rockstar._id,      genres: ['Action', 'Open World', 'Multiplayer'],imageUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png' },
 
     // FromSoftware
-    { title: 'Elden Ring',              year: 2022, studio: fromsoftware._id,  genres: ['RPG', 'Action', 'Open World'] },
-    { title: 'Dark Souls III',          year: 2016, studio: fromsoftware._id,  genres: ['RPG', 'Action'] },
-    { title: 'Sekiro',                  year: 2019, studio: fromsoftware._id,  genres: ['Action', 'Adventure'] },
-    { title: 'Bloodborne',              year: 2015, studio: fromsoftware._id,  genres: ['RPG', 'Action'] },
+    { title: 'Elden Ring',              year: 2022, studio: fromsoftware._id,  genres: ['RPG', 'Action', 'Open World'],      imageUrl: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Elden_Ring_Box_art.jpg' },
+    { title: 'Dark Souls III',          year: 2016, studio: fromsoftware._id,  genres: ['RPG', 'Action'],                    imageUrl: 'https://upload.wikimedia.org/wikipedia/en/b/bb/Dark_souls_3_cover_art.jpg' },
+    { title: 'Sekiro',                  year: 2019, studio: fromsoftware._id,  genres: ['Action', 'Adventure'],              imageUrl: 'https://upload.wikimedia.org/wikipedia/en/6/6e/Sekiro_art.jpg' },
+    { title: 'Bloodborne',              year: 2015, studio: fromsoftware._id,  genres: ['RPG', 'Action'],                    imageUrl: 'https://upload.wikimedia.org/wikipedia/en/6/68/Bloodborne_Cover_Wallpaper.jpg' },
 
     // Naughty Dog
-    { title: 'The Last of Us Part I',   year: 2022, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'] },
-    { title: 'The Last of Us Part II',  year: 2020, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'] },
-    { title: 'Uncharted 4',             year: 2016, studio: naughtydog._id,    genres: ['Action', 'Adventure'] },
+    { title: 'The Last of Us Part I',   year: 2022, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'],  imageUrl: 'https://upload.wikimedia.org/wikipedia/en/9/9e/The_Last_of_Us_Part_I_cover_art.jpg' },
+    { title: 'The Last of Us Part II',  year: 2020, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'],  imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4f/Tlouspart2.jpg' },
+    { title: 'Uncharted 4',             year: 2016, studio: naughtydog._id,    genres: ['Action', 'Adventure'],              imageUrl: 'https://upload.wikimedia.org/wikipedia/en/1/1a/Uncharted_4_box_artwork.jpg' },
 
     // Bethesda
-    { title: 'Skyrim',                  year: 2011, studio: bethesda._id,      genres: ['RPG', 'Open World'] },
-    { title: 'Fallout 4',               year: 2015, studio: bethesda._id,      genres: ['RPG', 'Action', 'Open World'] },
+    { title: 'Skyrim',                  year: 2011, studio: bethesda._id,      genres: ['RPG', 'Open World'],                imageUrl: 'https://upload.wikimedia.org/wikipedia/en/1/15/The_Elder_Scrolls_V_Skyrim_cover.png' },
+    { title: 'Fallout 4',               year: 2015, studio: bethesda._id,      genres: ['RPG', 'Action', 'Open World'],      imageUrl: 'https://upload.wikimedia.org/wikipedia/en/7/70/Fallout_4_cover_art.jpg' },
 
     // Ubisoft
-    { title: 'Assassin\'s Creed Origins', year: 2017, studio: ubisoft._id,    genres: ['Action', 'Adventure', 'Open World'] },
-    { title: 'Far Cry 5',               year: 2018, studio: ubisoft._id,       genres: ['Action', 'Open World'] },
+    { title: 'Assassin\'s Creed Origins', year: 2017, studio: ubisoft._id,    genres: ['Action', 'Adventure', 'Open World'],imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4a/Assassin%27s_Creed_Origins_Cover_Art.png' },
+    { title: 'Far Cry 5',               year: 2018, studio: ubisoft._id,       genres: ['Action', 'Open World'],             imageUrl: 'https://upload.wikimedia.org/wikipedia/en/9/95/Far_Cry_5_cover_art.jpg' },
 
     // Valve
-    { title: 'Portal 2',                year: 2011, studio: valve._id,         genres: ['Puzzle', 'Adventure', 'Multiplayer'] },
-    { title: 'Half-Life: Alyx',         year: 2020, studio: valve._id,         genres: ['Action', 'VR'] },
+    { title: 'Portal 2',                year: 2011, studio: valve._id,         genres: ['Puzzle', 'Adventure', 'Multiplayer'],imageUrl: 'https://upload.wikimedia.org/wikipedia/en/f/f9/Portal2cover.jpg' },
+    { title: 'Half-Life: Alyx',         year: 2020, studio: valve._id,         genres: ['Action', 'VR'],                     imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/49/Half-Life_Alyx_Cover_Art.jpg' },
   ]);
 
   // Map games by title for easy reference

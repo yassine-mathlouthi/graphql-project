@@ -7,6 +7,7 @@ module.exports = gql`
     title: String!
     year: Int!
     genres: [String!]!
+    imageUrl: String
     studio: Studio!
     reviews: [Review!]!
   }
@@ -30,7 +31,7 @@ module.exports = gql`
     studios: [Studio!]!
   }
 
-  type Mutation {
+  type Mutation {, imageUrl: String
     addGame(title: String!, year: Int!, studioId: ID!, genres: [String!]): Game!
     updateGame(id: ID!, title: String, year: Int): Game!
     deleteGame(id: ID!): Boolean!

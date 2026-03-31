@@ -24,27 +24,38 @@ export default function GameDetails() {
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           Back to Index
         </Link>
-        <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">
-          {game.title}
-        </h1>
-        
-        <div className="flex gap-4 items-center mt-6 text-sm font-semibold text-gray-700 bg-gray-100 p-4 border-l-4 border-gray-900">
-          <span className="uppercase tracking-widest bg-white border border-gray-200 px-3 py-1">
-            {game.year}
-          </span>
-          <span className="text-gray-400">/</span>
-          <span>{game.studio.name}</span>
-          <span className="text-gray-400">/</span>
-          <div className="flex gap-1">
-            {game.genres.join(', ')}
+
+        <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
+          {game.imageUrl && (
+            <img
+              src={game.imageUrl}
+              alt={game.title} 
+              className="w-full md:w-64 lg:w-80 rounded-lg shadow-sm border border-gray-200"
+            />
+          )}
+
+          <div className="flex-1 mt-0 md:mt-8">
+            <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter mb-6">
+              {game.title}
+            </h1>
+
+            <div className="flex flex-wrap gap-4 items-center text-sm font-semibold text-gray-700 bg-gray-100 p-4 border-l-4 border-gray-900">
+              <span className="uppercase tracking-widest bg-white border border-gray-200 px-3 py-1">
+                {game.year}
+              </span>
+              <span className="text-gray-400">/</span>
+              <span>{game.studio.name}</span>
+              <span className="text-gray-400">/</span>
+              <div className="flex gap-1">
+                {game.genres.join(', ')}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="border border-gray-200 bg-white">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <MessageSquare size={20} className="text-gray-400" />
+        <div className="flex items-center justify-between border-b-2 border-gray-900 pb-4 mb-8">
+          <h2 className="text-2xl font-bold flex items-center gap-3 text-gray-900">
+            <MessageSquare size={24} />
             Performance Reviews
           </h2>
           <span className="text-sm font-mono text-gray-500">

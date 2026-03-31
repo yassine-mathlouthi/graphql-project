@@ -13,6 +13,7 @@ export default function AddGame() {
     year: new Date().getFullYear(),
     studioId: '',
     genres: '',
+    imageUrl: '',
   });
 
   const [addGame, { loading, error }] = useMutation(ADD_GAME, {
@@ -29,7 +30,8 @@ export default function AddGame() {
         title: formData.title,
         year: parseInt(formData.year, 10),
         studioId: formData.studioId,
-        genres: formData.genres.split(',').map(g => g.trim()).filter(Boolean)
+        genres: formData.genres.split(',').map(g => g.trim()).filter(Boolean),
+        imageUrl: formData.imageUrl.trim() || null,
       }
     });
   };
@@ -108,6 +110,19 @@ export default function AddGame() {
               className="w-full p-3 border border-gray-300 focus:border-gray-900 focus:ring-0 outline-none transition-colors"
               value={formData.genres}
               onChange={(e) => setFormData(prev => ({ ...prev, genres: e.target.value }))}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+              Cover Image URL (Optional)
+            </label>
+            <input
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              className="w-full p-3 border border-gray-300 focus:border-gray-900 focus:ring-0 outline-none transition-colors"
+              value={formData.imageUrl}
+              onChange={(e) => setFormData(prev => ({ ...prev, imageUrl: e.target.value }))}
             />
           </div>
         </div>

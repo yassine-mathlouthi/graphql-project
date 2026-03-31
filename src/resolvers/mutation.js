@@ -5,10 +5,10 @@ const Review = require('../models/Review');
 const { pubsub } = require('./subscription');
 
 module.exports = {
-  addGame: async (_, { title, year, studioId, genres = [] }, { user }) => {
+  addGame: async (_, { title, year, studioId, genres = [], imageUrl }, { user }) => {
     if (!user) throw new Error('Unauthorized');
 
-    const game = await Game.create({ title, year, studio: studioId, genres });
+    const game = await Game.create({ title, year, studio: studioId, genres, imageUrl });
     await game.populate('studio');
 
     pubsub.publish('GAME_ADDED', { gameAdded: game });

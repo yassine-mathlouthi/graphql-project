@@ -7,6 +7,7 @@ export const GAME_FIELDS = gql`
     title
     year
     genres
+    imageUrl
     studio {
       id
       name
