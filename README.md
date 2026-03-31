@@ -114,13 +114,4 @@ Authorization: Bearer <JWT_TOKEN>
 Subscriptions
 - `gameAdded` and `reviewAdded(gameId: ID!)` are available. The project uses an in-process `PubSub` (`graphql-subscriptions`) so subscriptions work when the server process is running.
 
-Troubleshooting
-- `MongooseError: The 'uri' parameter to 'openUri()' must be a string, got "undefined".` — means `process.env.MONGO_URI` is missing. Ensure `.env` exists and has `MONGO_URI`, and that `src/index.js` loads `dotenv` (it does).
-- If seeding fails, run `node src/seed.js` and inspect the error; common causes are connectivity or schema validation issues.
 
-Next suggestions
-- I can add a small `scripts` section to `package.json` (e.g., `start`, `seed`) and update README run commands accordingly.
-- I can add a minimal example for `generateToken` usage to create a test user token for local testing.
-
----
-If you want, I will add `npm` scripts and commit the README update.
