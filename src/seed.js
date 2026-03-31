@@ -29,7 +29,7 @@ async function seed() {
     { title: 'Breath of the Wild',      year: 2017, studio: nintendo._id,      genres: ['Adventure', 'RPG', 'Open World'],   imageUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c6/The_Legend_of_Zelda_Breath_of_the_Wild.jpg' },
     { title: 'Tears of the Kingdom',    year: 2023, studio: nintendo._id,      genres: ['Adventure', 'RPG', 'Open World'],   imageUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg' },
     { title: 'Super Mario Odyssey',     year: 2017, studio: nintendo._id,      genres: ['Platformer', 'Adventure'],          imageUrl: 'https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg' },
-    { title: 'Mario Kart 8 Deluxe',     year: 2017, studio: nintendo._id,      genres: ['Racing', 'Multiplayer'],            imageUrl: 'https://upload.wikimedia.org/wikipedia/en/b/b5/Mario_Kart_8.jpg' },
+    { title: 'Mario Kart 8 Deluxe',     year: 2017, studio: nintendo._id,      genres: ['Racing', 'Multiplayer'],            imageUrl: 'https://static.wikia.nocookie.net/mariokart/images/9/9b/MK8_Deluxe_-_Box_NA.png/revision/latest?cb=20170704085016' },
 
     // CD Projekt Red
     { title: 'The Witcher 3',           year: 2015, studio: cdpr._id,          genres: ['RPG', 'Open World'],                imageUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg' },
@@ -46,8 +46,8 @@ async function seed() {
     { title: 'Bloodborne',              year: 2015, studio: fromsoftware._id,  genres: ['RPG', 'Action'],                    imageUrl: 'https://upload.wikimedia.org/wikipedia/en/6/68/Bloodborne_Cover_Wallpaper.jpg' },
 
     // Naughty Dog
-    { title: 'The Last of Us Part I',   year: 2022, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'],  imageUrl: 'https://upload.wikimedia.org/wikipedia/en/9/9e/The_Last_of_Us_Part_I_cover_art.jpg' },
-    { title: 'The Last of Us Part II',  year: 2020, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'],  imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4f/Tlouspart2.jpg' },
+    { title: 'The Last of Us Part I',   year: 2022, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'],  imageUrl: 'https://upload.wikimedia.org/wikipedia/en/8/86/The_Last_of_Us_Part_I_cover.jpg' },
+    { title: 'The Last of Us Part II',  year: 2020, studio: naughtydog._id,    genres: ['Action', 'Adventure', 'Survival'],  imageUrl: 'https://images-cdn.ubuy.co.in/6512693724dfc14c8912c4be-the-last-of-us-part-ii-gaming-poster.jpg' },
     { title: 'Uncharted 4',             year: 2016, studio: naughtydog._id,    genres: ['Action', 'Adventure'],              imageUrl: 'https://upload.wikimedia.org/wikipedia/en/1/1a/Uncharted_4_box_artwork.jpg' },
 
     // Bethesda
@@ -56,7 +56,7 @@ async function seed() {
 
     // Ubisoft
     { title: 'Assassin\'s Creed Origins', year: 2017, studio: ubisoft._id,    genres: ['Action', 'Adventure', 'Open World'],imageUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4a/Assassin%27s_Creed_Origins_Cover_Art.png' },
-    { title: 'Far Cry 5',               year: 2018, studio: ubisoft._id,       genres: ['Action', 'Open World'],             imageUrl: 'https://upload.wikimedia.org/wikipedia/en/9/95/Far_Cry_5_cover_art.jpg' },
+    { title: 'Far Cry 5',               year: 2018, studio: ubisoft._id,       genres: ['Action', 'Open World'],             imageUrl: 'https://pbs.twimg.com/media/DAmrLYiXsAA5xXP.jpg' },
 
     // Valve
     { title: 'Portal 2',                year: 2011, studio: valve._id,         genres: ['Puzzle', 'Adventure', 'Multiplayer'],imageUrl: 'https://upload.wikimedia.org/wikipedia/en/f/f9/Portal2cover.jpg' },

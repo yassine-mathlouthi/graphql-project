@@ -1,15 +1,25 @@
+import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import { GET_GAMES } from '../graphql/queries';
-import { Calendar, Building, ChevronRight, Hash } from 'lucide-react';
+import { Calendar, Building, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function GamesList() {
-  const { data, loading, error } = useQuery(GET_GAMES);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 9; // Perfect for a 3-column grid layout
 
-  if (loading) {
+  const { data, loading, error, previousData } = useQuery(GET_GAMES, {
+    variables: { page: currentPage, limit },
+    fetchPolicy: 'cache-and-network',
+  });
+
+  // Use previousData while loading new pages to prevent flickering
+  const currentData = data || previousData;
+
+  if (loading && !currentData) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
-        {[...Array(6)].map((_, i) => (
+        {[...Array(9)].map((_, i) => (
           <div key={i} className="h-44 bg-gray-200 border border-gray-300 rounded" />
         ))}
       </div>
@@ -24,20 +34,23 @@ export default function GamesList() {
     );
   }
 
+  const { games, gameCount } = currentData;
+  const totalPages = Math.ceil(gameCount / limit);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 pb-10">
       <div className="flex justify-between items-end border-b border-gray-200 pb-4">
         <div>
           <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Database Index</h1>
           <p className="text-gray-500 mt-1">Listing all available projects from the current schema.</p>
         </div>
         <div className="text-sm font-semibold text-gray-500">
-          {data.games.length} record(s) 
+          Showing {games.length} of {gameCount} record(s) 
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.games.map(game => (
+        {games.map(game => (
           <Link 
             key={game.id} 
             to={`/game/${game.id}`}
@@ -89,6 +102,45 @@ export default function GamesList() {
           </Link>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 pt-6 border-t border-gray-200">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            className="p-2 flex items-center gap-1 border border-gray-300 rounded font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft size={18} /> Prev
+          </button>
+          
+          <div className="flex gap-1">
+            {[...Array(totalPages)].map((_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <button
+                  key={pageNumber}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  className={`w-10 h-10 flex items-center justify-center border font-semibold rounded transition-colors ${
+                    currentPage === pageNumber
+                      ? 'bg-gray-900 text-white border-gray-900'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {pageNumber}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            className="p-2 flex items-center gap-1 border border-gray-300 rounded font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            Next <ChevronRight size={18} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

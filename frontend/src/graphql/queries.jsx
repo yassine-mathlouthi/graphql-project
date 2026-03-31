@@ -21,6 +21,7 @@ export const GET_GAMES = gql`
     games(page: $page, limit: $limit, genre: $genre, sortBy: $sortBy, order: $order) {
       ...GameFields
     }
+    gameCount(genre: $genre)
   }
 `;
 

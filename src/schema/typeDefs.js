@@ -27,12 +27,13 @@ module.exports = gql`
 
   type Query {
     games(page: Int, limit: Int, genre: String, sortBy: String, order: String): [Game!]!
+    gameCount(genre: String): Int!
     game(id: ID!): Game
     studios: [Studio!]!
   }
 
-  type Mutation {, imageUrl: String
-    addGame(title: String!, year: Int!, studioId: ID!, genres: [String!]): Game!
+  type Mutation {
+    addGame(title: String!, year: Int!, studioId: ID!, genres: [String!], imageUrl: String): Game!
     updateGame(id: ID!, title: String, year: Int): Game!
     deleteGame(id: ID!): Boolean!
     addReview(gameId: ID!, rating: Int!, comment: String!): Review!

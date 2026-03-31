@@ -14,6 +14,11 @@ module.exports = {
       .populate('studio');
   },
 
+  gameCount: async (_, { genre }) => {
+    const filter = genre ? { genres: genre } : {};
+    return await Game.countDocuments(filter);
+  },
+
   game: async (_, { id }) => {
     return await Game.findById(id).populate('studio');
   },
