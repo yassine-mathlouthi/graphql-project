@@ -1,26 +1,19 @@
 # graphql-project
 
-Small starter GraphQL project scaffold. This repository contains an empty GraphQL server layout (schema, resolvers, models) and a MongoDB connection helper. The files are intentionally empty so you can implement your domain logic.
+This repository is a small GraphQL server implementation using Apollo Server and MongoDB. It includes implemented models, schema, resolvers, a seed script, and simple JWT-based auth helpers.
 
-**Project structure**
-- `src/`
-  - `schema/typeDefs.js` — GraphQL type definitions (empty)
-  - `resolvers/` — resolver files (empty)
-    - `query.js`
-    - `mutation.js`
-    - `subscription.js`
-  - `models/` — Mongoose model files (empty)
-    - `Game.js`
-    - `Studio.js`
-    - `Review.js`
-  - `db/connect.js` — MongoDB connection helper (uses `process.env.MONGO_URI`)
-  - `index.js` — application entry that starts Apollo Server and loads environment variables
-- `.env` — environment variables (not committed)
-- `.gitignore` — ignores `node_modules/` and `.env`
+Project highlights
+- `src/index.js` — application entry. Loads environment variables (`dotenv`), connects to MongoDB, and starts Apollo Server.
+- `src/db/connect.js` — MongoDB connection helper using `mongoose` and `process.env.MONGO_URI`.
+- `src/seed.js` — script that seeds studios, games, and reviews into the database.
+- `src/auth.js` — `generateToken` / `verifyToken` using `JWT_SECRET` from `.env`.
+- `src/models/` — Mongoose models: `Game.js`, `Studio.js`, `Review.js`.
+- `src/schema/typeDefs.js` — GraphQL type definitions.
+- `src/resolvers/` — resolvers for `Query`, `Mutation`, `Subscription`, and type resolvers (`types.js`).
 
 Prerequisites
-- Node.js (16+ recommended)
-- MongoDB accessible locally or remotely
+- Node.js (v16+ recommended)
+- A running MongoDB instance (local or remote)
 
 Setup
 1. Install dependencies:
@@ -29,57 +22,75 @@ Setup
 npm install
 ```
 
-2. Create a `.env` file (already present but adjust values if needed) with at least:
+2. Ensure the `.env` file at the project root contains:
 
 ```text
 MONGO_URI=mongodb://localhost:27017/graphql_project
 JWT_SECRET=your_jwt_secret_here
 ```
 
-How it works (what we added)
-- `src/index.js` now loads environment variables early with `dotenv` so `process.env.MONGO_URI` is available before attempting to connect to MongoDB.
-- `src/db/connect.js` contains the async `connectDB()` function which calls `mongoose.connect(process.env.MONGO_URI)` and logs connection status.
-- The schema, resolvers, and model files are scaffolded (empty) so you can implement GraphQL types, resolver logic, and Mongoose models.
+Seeding the database
+Run the seed script to populate sample `studios`, `games`, and `reviews`:
 
-Running the server
+```powershell
+node src/seed.js
+```
 
-Start the server with:
+You should see output similar to:
+
+```
+✅ Seeded:
+   8 studios
+   24 games
+   35 reviews
+```
+
+Starting the server
+Start the GraphQL server with:
 
 ```powershell
 node src/index.js
 ```
 
-If everything is configured, you should see:
+Expected output when successful:
 
 ```
 MongoDB connected
 API ready at http://localhost:4000/
 ```
 
-Example usage (GraphQL queries)
+Authentication
+- `src/auth.js` exposes `generateToken(user)` and `verifyToken(token)`. `src/index.js` uses `verifyToken` in the Apollo `context` to populate `context.user` from the `Authorization: Bearer <token>` header. Most mutations check `context.user` and will throw `Unauthorized` if missing.
 
-Open the GraphQL playground at the URL printed by the server (Apollo Server provides a web UI). Example GraphQL requests you can try once you implement types/resolvers:
+Examples (use GraphQL playground)
 
-Query (example):
+Query: list games (pagination, sort and optional genre filter)
 
 ```graphql
-query GetGames {
-  games {
+query GetGames($page: Int, $limit: Int, $genre: String) {
+  games(page: $page, limit: $limit, genre: $genre) {
     id
     title
-    studio {
-      id
-      name
-    }
+    year
+    genres
+    studio { id name }
+    reviews { id rating comment }
   }
+}
+
+# variables
+{
+  "page": 1,
+  "limit": 10,
+  "genre": null
 }
 ```
 
-Mutation (example):
+Mutation: add a game (requires Authorization header)
 
 ```graphql
-mutation CreateGame($input: CreateGameInput!) {
-  createGame(input: $input) {
+mutation AddGame($title: String!, $year: Int!, $studioId: ID!, $genres: [String!]) {
+  addGame(title: $title, year: $year, studioId: $studioId, genres: $genres) {
     id
     title
   }
@@ -87,18 +98,29 @@ mutation CreateGame($input: CreateGameInput!) {
 
 # variables
 {
-  "input": { "title": "My Game", "studioId": "..." }
+  "title": "Example Game",
+  "year": 2024,
+  "studioId": "<studio-id>",
+  "genres": ["Action"]
 }
 ```
 
-Troubleshooting
-- If you get an error that the MongoDB URI is `undefined`, ensure `.env` exists and includes `MONGO_URI`, and that `dotenv` is loaded before `connectDB()` is called. The entry file (`src/index.js`) already calls `require('dotenv').config()`.
-- For permission or network errors, verify your MongoDB server is running and accessible at the URI you provided.
+When calling protected mutations, add a header:
 
-Next steps you might want me to do
-- Initialize a git repo and make an initial commit
-- Add minimal example implementations for one model, typeDefs, and resolvers
-- Add tests or a small example script that seeds the database
+```
+Authorization: Bearer <JWT_TOKEN>
+```
+
+Subscriptions
+- `gameAdded` and `reviewAdded(gameId: ID!)` are available. The project uses an in-process `PubSub` (`graphql-subscriptions`) so subscriptions work when the server process is running.
+
+Troubleshooting
+- `MongooseError: The 'uri' parameter to 'openUri()' must be a string, got "undefined".` — means `process.env.MONGO_URI` is missing. Ensure `.env` exists and has `MONGO_URI`, and that `src/index.js` loads `dotenv` (it does).
+- If seeding fails, run `node src/seed.js` and inspect the error; common causes are connectivity or schema validation issues.
+
+Next suggestions
+- I can add a small `scripts` section to `package.json` (e.g., `start`, `seed`) and update README run commands accordingly.
+- I can add a minimal example for `generateToken` usage to create a test user token for local testing.
 
 ---
-Generated by an assistant: empty scaffold files were created and `.gitignore` added. Implement types/resolvers/models to make the API functional.
+If you want, I will add `npm` scripts and commit the README update.
