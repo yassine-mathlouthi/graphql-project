@@ -41,6 +41,8 @@ module.exports = gql`
 
   type Subscription {
     gameAdded: Game!
+    gameUpdated: Game!
+    gameDeleted: ID!
     reviewAdded(gameId: ID!): Review!
   }
 `;

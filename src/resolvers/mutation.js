@@ -18,7 +18,9 @@ module.exports = {
   updateGame: async (_, { id, ...updates }, { user }) => {
     if (!user) throw new Error('Unauthorized');
 
-    return await Game.findByIdAndUpdate(id, updates, { new: true }).populate('studio');
+    const game = await Game.findByIdAndUpdate(id, updates, { new: true }).populate('studio');
+    pubsub.publish('GAME_UPDATED', { gameUpdated: game });
+    return game;
   },
 
   deleteGame: async (_, { id }, { user }) => {
@@ -26,6 +28,8 @@ module.exports = {
 
     await Game.findByIdAndDelete(id);
     await Review.deleteMany({ game: id }); // cascade delete reviews
+    
+    pubsub.publish('GAME_DELETED', { gameDeleted: id });
     return true;
   },
 

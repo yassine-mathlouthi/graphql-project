@@ -1,13 +1,36 @@
 import { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { GET_GAME } from '../graphql/queries';
+import { REVIEW_ADDED } from '../graphql/subscriptions';
 import { ArrowLeft, Star, MessageSquare } from 'lucide-react';
 
 export default function GameDetails() {
   const { id } = useParams();
-  const { data, loading, error } = useQuery(GET_GAME, {
+  const { data, loading, error, subscribeToMore } = useQuery(GET_GAME, {
     variables: { id }
   });
+
+  useEffect(() => {
+    const unsubscribe = subscribeToMore({
+      document: REVIEW_ADDED,
+      variables: { gameId: id },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newReview = subscriptionData.data.reviewAdded;
+        
+        // Prevent duplicates
+        if (prev.game.reviews.find(r => r.id === newReview.id)) return prev;
+
+        return Object.assign({}, prev, {
+          game: Object.assign({}, prev.game, {
+            reviews: [...prev.game.reviews, newReview]
+          })
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, [id, subscribeToMore]);
 
   if (loading) return <div>Loading records...</div>;
   if (error) return <div>Error retrieving data: {error.message}</div>;
