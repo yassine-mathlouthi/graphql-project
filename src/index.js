@@ -36,14 +36,35 @@ const wsServer = new WebSocketServer({
   path: '/graphql',
 });
 
-const serverCleanup = useServer({ schema }, wsServer);
+const serverCleanup = useServer({ 
+  schema,
+  context: async (ctx) => {
+    const authHeader = ctx.connectionParams?.authorization;
+    if (!authHeader) throw new Error("Accès refusé : Authentification WS requise.");
+    const token = authHeader.replace('Bearer ', '');
+    const user = await verifyToken(token);
+    return { user };
+  }
+}, wsServer);
 
 const server = new ApolloServer({
   schema,
-  context: ({ req }) => {
+  context: async ({ req }) => {
+    // On autorise la requête locale d'introspection pour que le playground Apollo fonctionne
+    if (req?.body?.operationName === 'IntrospectionQuery') return;
+
     const token = req?.headers?.authorization?.replace('Bearer ', '');
-    const user  = token ? verifyToken(token) : null;
-    return { user };
+    if (!token) {
+      throw new Error("Accès refusé : Vous devez être connecté via Keycloak.");
+    }
+    
+    try {
+      const user = await verifyToken(token);
+      return { user };
+    } catch (err) {
+      console.error("Token verification failed:", err);
+      throw new Error("Accès refusé : Token Keycloak invalide ou expiré.");
+    }
   },
   plugins: [
     ApolloServerPluginDrainHttpServer({ httpServer }),

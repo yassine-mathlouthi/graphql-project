@@ -3,6 +3,7 @@ import { setContext } from '@apollo/client/link/context';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import keycloak from '../keycloak';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
@@ -10,20 +11,24 @@ const httpLink = createHttpLink({
 
 const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:4000/graphql',
-  connectionParams: () => {
-    const token = localStorage.getItem('token');
-    return {
-      authorization: token ? `Bearer ${token}` : '',
-    };
+  connectionParams: async () => {
+    if (keycloak.token) {
+      await keycloak.updateToken(30).catch(() => keycloak.login());
+      return { authorization: `Bearer ${keycloak.token}` };
+    }
+    return {};
   }
 }));
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
+const authLink = setContext(async (_, { headers }) => {
+  if (keycloak.token) {
+    // Si le token expire dans moins de 30 secondes, on le rafraîchit
+    await keycloak.updateToken(30).catch(() => keycloak.login());
+  }
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: keycloak.token ? `Bearer ${keycloak.token}` : '',
     }
   };
 });
