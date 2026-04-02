@@ -4,16 +4,16 @@ const pubsub = new PubSub();
 
 const subscriptionResolvers = {
   gameAdded: {
-    subscribe: () => pubsub.asyncIterator(['GAME_ADDED']),
+    subscribe: () => pubsub.asyncIterableIterator(['GAME_ADDED']),
   },
   gameUpdated: {
-    subscribe: () => pubsub.asyncIterator(['GAME_UPDATED']),
+    subscribe: () => pubsub.asyncIterableIterator(['GAME_UPDATED']),
   },
   gameDeleted: {
-    subscribe: () => pubsub.asyncIterator(['GAME_DELETED']),
+    subscribe: () => pubsub.asyncIterableIterator(['GAME_DELETED']),
   },
   reviewAdded: {
-    subscribe: (_, { gameId }) => pubsub.asyncIterator([`REVIEW_ADDED_${gameId}`]),
+    subscribe: (_, { gameId }) => pubsub.asyncIterableIterator([`REVIEW_ADDED_${gameId}`]),
   },
 };
 
