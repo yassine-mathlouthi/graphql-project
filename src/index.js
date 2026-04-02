@@ -31,6 +31,25 @@ const schema = makeExecutableSchema({
 const app = express();
 const httpServer = createServer(app);
 
+function buildAuthContextFromToken(token) {
+  if (!token) {
+    return { user: null, roles: [], isAdmin: false };
+  }
+
+  return verifyToken(token).then(user => {
+    const realmRoles = user?.realm_access?.roles || [];
+    const clientRoles = Object.values(user?.resource_access || {})
+      .flatMap(client => client?.roles || []);
+    const roles = Array.from(new Set([...realmRoles, ...clientRoles]));
+
+    return {
+      user,
+      roles,
+      isAdmin: roles.includes('admin'),
+    };
+  });
+}
+
 const wsServer = new WebSocketServer({
   server: httpServer,
   path: '/graphql',
@@ -40,10 +59,14 @@ const serverCleanup = useServer({
   schema,
   context: async (ctx) => {
     const authHeader = ctx.connectionParams?.authorization;
-    if (!authHeader) throw new Error("Accès refusé : Authentification WS requise.");
-    const token = authHeader.replace('Bearer ', '');
-    const user = await verifyToken(token);
-    return { user };
+    const token = authHeader?.replace('Bearer ', '');
+
+    try {
+      return await buildAuthContextFromToken(token);
+    } catch (err) {
+      console.error('WS token verification failed:', err);
+      return { user: null, roles: [], isAdmin: false };
+    }
   }
 }, wsServer);
 
@@ -51,19 +74,17 @@ const server = new ApolloServer({
   schema,
   context: async ({ req }) => {
     // On autorise la requête locale d'introspection pour que le playground Apollo fonctionne
-    if (req?.body?.operationName === 'IntrospectionQuery') return;
+    if (req?.body?.operationName === 'IntrospectionQuery') {
+      return { user: null, roles: [], isAdmin: false };
+    }
 
     const token = req?.headers?.authorization?.replace('Bearer ', '');
-    if (!token) {
-      throw new Error("Accès refusé : Vous devez être connecté via Keycloak.");
-    }
-    
+
     try {
-      const user = await verifyToken(token);
-      return { user };
+      return await buildAuthContextFromToken(token);
     } catch (err) {
       console.error("Token verification failed:", err);
-      throw new Error("Accès refusé : Token Keycloak invalide ou expiré.");
+      return { user: null, roles: [], isAdmin: false };
     }
   },
   plugins: [

@@ -13,7 +13,7 @@ const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:4000/graphql',
   connectionParams: async () => {
     if (keycloak.token) {
-      await keycloak.updateToken(30).catch(() => keycloak.login());
+      await keycloak.updateToken(30).catch(() => undefined);
       return { authorization: `Bearer ${keycloak.token}` };
     }
     return {};
@@ -23,12 +23,12 @@ const wsLink = new GraphQLWsLink(createClient({
 const authLink = setContext(async (_, { headers }) => {
   if (keycloak.token) {
     // Si le token expire dans moins de 30 secondes, on le rafraîchit
-    await keycloak.updateToken(30).catch(() => keycloak.login());
+    await keycloak.updateToken(30).catch(() => undefined);
   }
   return {
     headers: {
       ...headers,
-      authorization: keycloak.token ? `Bearer ${keycloak.token}` : '',
+      ...(keycloak.token ? { authorization: `Bearer ${keycloak.token}` } : {}),
     }
   };
 });

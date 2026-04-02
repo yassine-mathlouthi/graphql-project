@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ADD_GAME } from '../graphql/mutations';
 import { GET_GAMES, GET_STUDIOS } from '../graphql/queries';
+import { getKeycloakUserState } from '../auth/keycloakUser';
+import { ShieldAlert } from 'lucide-react';
 
 export default function AddGame() {
   const navigate = useNavigate();
+  const { isAdmin } = getKeycloakUserState();
   const { data: studiosData, loading: studiosLoading } = useQuery(GET_STUDIOS);
 
   const [formData, setFormData] = useState({
@@ -35,6 +38,27 @@ export default function AddGame() {
       }
     });
   };
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-2xl mx-auto border border-gray-200 rounded-lg overflow-hidden bg-white">
+        <div className="h-1 bg-gradient-to-r from-gray-900 via-gray-600 to-gray-900" />
+        <div className="p-8 text-center space-y-4">
+          <ShieldAlert size={34} className="mx-auto text-gray-800" />
+          <h1 className="text-2xl font-black text-gray-900">Admin Access Required</h1>
+          <p className="text-gray-600 max-w-md mx-auto">
+            Only users with the admin realm role can add, update, or delete projects.
+          </p>
+          <Link
+            to="/"
+            className="inline-flex items-center px-5 py-2.5 border border-gray-900 text-sm font-bold text-gray-900 hover:bg-gray-900 hover:text-white transition-colors uppercase tracking-widest"
+          >
+            Return to Games Index
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (studiosLoading) return <div>Loading initial data...</div>;
 

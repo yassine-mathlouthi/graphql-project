@@ -28,3 +28,12 @@ export const DELETE_GAME = gql`
     deleteGame(id: $id)
   }
 `;
+
+export const UPDATE_GAME = gql`
+  ${GAME_FIELDS}
+  mutation UpdateGame($id: ID!, $title: String, $year: Int) {
+    updateGame(id: $id, title: $title, year: $year) {
+      ...GameFields
+    }
+  }
+`;

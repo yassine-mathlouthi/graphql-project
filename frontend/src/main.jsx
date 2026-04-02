@@ -5,7 +5,7 @@ import App from './App.jsx'
 import keycloak from './keycloak';
 
 function KeycloakProvider({ children }) {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const isRun = useRef(false);
 
   useEffect(() => {
@@ -13,17 +13,17 @@ function KeycloakProvider({ children }) {
     isRun.current = true;
     
     keycloak
-      .init({ onLoad: 'login-required', checkLoginIframe: false })
-      .then((auth) => {
-        setAuthenticated(auth);
+      .init({ onLoad: 'check-sso', checkLoginIframe: false })
+      .then(() => {
+        setIsReady(true);
       })
       .catch((err) => {
         console.error('Erreur initialisation Keycloak', err);
-        // Sometimes it fails here due to quick reloads, we could try to handle it.
+        setIsReady(true);
       });
   }, []);
 
-  if (!authenticated) {
+  if (!isReady) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-xl font-medium tracking-wide text-gray-800">

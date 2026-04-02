@@ -4,9 +4,15 @@ const Studio = require('../models/Studio');
 const Review = require('../models/Review');
 const { pubsub } = require('./subscription');
 
+function requireAdmin(isAdmin) {
+  if (!isAdmin) {
+    throw new Error('Forbidden: admin role is required for this action.');
+  }
+}
+
 module.exports = {
-  addGame: async (_, { title, year, studioId, genres = [], imageUrl }, { user }) => {
-    if (!user) throw new Error('Unauthorized');
+  addGame: async (_, { title, year, studioId, genres = [], imageUrl }, { isAdmin }) => {
+    requireAdmin(isAdmin);
 
     const game = await Game.create({ title, year, studio: studioId, genres, imageUrl });
     await game.populate('studio');
@@ -15,16 +21,16 @@ module.exports = {
     return game;
   },
 
-  updateGame: async (_, { id, ...updates }, { user }) => {
-    if (!user) throw new Error('Unauthorized');
+  updateGame: async (_, { id, ...updates }, { isAdmin }) => {
+    requireAdmin(isAdmin);
 
     const game = await Game.findByIdAndUpdate(id, updates, { new: true }).populate('studio');
     pubsub.publish('GAME_UPDATED', { gameUpdated: game });
     return game;
   },
 
-  deleteGame: async (_, { id }, { user }) => {
-    if (!user) throw new Error('Unauthorized');
+  deleteGame: async (_, { id }, { isAdmin }) => {
+    requireAdmin(isAdmin);
 
     await Game.findByIdAndDelete(id);
     await Review.deleteMany({ game: id }); // cascade delete reviews
@@ -33,9 +39,7 @@ module.exports = {
     return true;
   },
 
-  addReview: async (_, { gameId, rating, comment }, { user }) => {
-    if (!user) throw new Error('Unauthorized');
-
+  addReview: async (_, { gameId, rating, comment }) => {
     const review = await Review.create({ game: gameId, rating, comment });
     await review.populate('game');
 

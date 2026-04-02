@@ -19,7 +19,7 @@ function App() {
             <Route index element={<GamesList />} />
             <Route path="game/:id" element={<GameDetails />} />
             <Route path="add-game" element={<AddGame />} />
-            <Route path="add-review" element={<AddReview />} />
+            <Route path="game/:id/add-review" element={<AddReview />} />
           </Route>
         </Routes>
       </BrowserRouter>

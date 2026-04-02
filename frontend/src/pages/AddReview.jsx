@@ -48,6 +48,10 @@ export default function AddReview() {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div className="p-3 border border-gray-200 bg-gray-50 text-sm text-gray-700">
+            Reviews are submitted anonymously. You can share feedback without displaying your identity.
+          </div>
+
           {error && (
             <div className="p-4 bg-red-50 text-red-700 border border-red-200 text-sm font-medium">
               Error: {error.message}
