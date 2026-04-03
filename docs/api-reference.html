@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GraphQL API Reference</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #152238;
+      --muted: #5b6b82;
+      --brand: #0f5cc0;
+      --brand-2: #0b7f6d;
+      --border: #dbe2ec;
+      --code-bg: #0f172a;
+      --code-ink: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, #d7e8ff 0%, transparent 28%),
+        radial-gradient(circle at 90% 0%, #d6fff2 0%, transparent 26%),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 20px 56px;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #0f5cc0, #0b7f6d);
+      color: #fff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 14px 28px rgba(15, 92, 192, 0.22);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: 0.2px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 4px 14px rgba(20, 30, 44, 0.05);
+    }
+
+    h2 {
+      margin: 28px 0 10px;
+      font-size: 22px;
+    }
+
+    h3 {
+      margin: 18px 0 8px;
+      font-size: 18px;
+    }
+
+    .muted { color: var(--muted); }
+
+    code {
+      background: #edf2f8;
+      border-radius: 5px;
+      padding: 2px 6px;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 0.95em;
+    }
+
+    pre {
+      margin: 8px 0 0;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border-radius: 10px;
+      padding: 14px;
+      overflow-x: auto;
+      border: 1px solid #243145;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+      vertical-align: middle;
+      border: 1px solid transparent;
+    }
+
+    .tag-admin {
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-color: #fecaca;
+    }
+
+    ul { margin-top: 6px; }
+
+    .footer {
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .playground-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #30415f;
+      letter-spacing: 0.2px;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+      font: inherit;
+    }
+
+    input,
+    textarea,
+    select {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
+      font-family: "Cascadia Code", Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(120deg, #0f5cc0, #0b7f6d);
+    }
+
+    .btn-secondary {
+      background: #334155;
+    }
+
+    .status {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 760px) {
+      .playground-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>GraphQL API Reference</h1>
+      <p>Documentation visuelle pour le backend GraphQL.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h3>Endpoints</h3>
+        <p><strong>HTTP:</strong> <code>http://localhost:4000/graphql</code></p>
+        <p><strong>WebSocket:</strong> <code>ws://localhost:4000/graphql</code></p>
+      </article>
+      <article class="card">
+        <h3>Authentification</h3>
+        <p class="muted">Header attendu:</p>
+        <pre>Authorization: Bearer &lt;token&gt;</pre>
+      </article>
+      <article class="card">
+        <h3>Roles</h3>
+        <p>Les actions admin exigent le role <code>admin</code>.</p>
+      </article>
+    </section>
+
+    <h2>Playground HTTP (Interactif)</h2>
+    <article class="card">
+      <p class="muted">Utilise ce bloc pour executer des requetes GraphQL en direct.</p>
+      
+      <details style="margin-top: 14px; padding: 10px; background: #fffbeb; border-radius: 10px; border: 1px solid #fbbf24;">
+        <summary style="cursor: pointer; font-weight: 700; color: #78350f;">📌 Comment récupérer le token ?</summary>
+        <div style="margin-top: 12px; font-size: 14px; line-height: 1.6;">
+          <p style="margin: 0 0 12px;"><strong>1.</strong> Lis <a href="../TOKEN.md">TOKEN.md</a> si tu veux la version complète.</p>
+          <p style="margin: 0 0 10px; padding: 10px; background: #34d399; border-radius: 6px; color: #065f46;"><strong>2.</strong> Ouvre PowerShell et colle cette commande:</p>
+          <pre style="background: #1f2937; color: #fbbf24; padding: 8px; border-radius: 6px; font-size: 11px; margin: 8px 0;">curl.exe -X POST http://localhost:8080/realms/graphql-realm/protocol/openid-connect/token -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=react-client&grant_type=password&username=&lt;ton_username&gt;&password=&lt;ton_password&gt;" | ConvertFrom-Json | Select-Object -ExpandProperty access_token | Set-Clipboard</pre>
+          <p style="margin: 8px 0;"><strong>3.</strong> Remplace <code>&lt;ton_username&gt;</code> et <code>&lt;ton_password&gt;</code> par tes identifiants Keycloak.</p>
+          <p style="margin: 8px 0; padding: 8px; background: #dbeafe; border-radius: 6px;"><strong>4.</strong> Le token est copié automatiquement, puis colle-le dans le champ "🔐 Token Bearer" ci-dessous.</p>
+        </div>
+      </details>
+
+      <div class="field">
+        <label for="endpoint">Endpoint HTTP</label>
+        <input id="endpoint" type="text" value="http://localhost:4000/graphql" />
+      </div>
+
+      <div class="field">
+        <label for="token">🔐 Token Bearer (pour mutations admin)</label>
+        <div style="display: flex; gap: 8px; margin-top: 8px;">
+          <input id="token" type="password" placeholder="Colle ton access_token ici" style="flex: 1;" />
+          <button id="toggleTokenVisibility" type="button" style="padding: 8px 12px; background: #666; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">👁️</button>
+          <button id="clearToken" type="button" style="padding: 8px 12px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">❌</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <label for="preset" class="muted">Exemple:</label>
+        <select id="preset">
+          <option value="games">📖 GetGames (lecture)</option>
+          <option value="studios">📖 GetStudios (lecture)</option>
+          <option value="game">📖 GetGame (lecture)</option>
+          <option value="addReview">📝 AddReview (public)</option>
+          <option value="addGame">🔒 AddGame (admin)</option>
+          <option value="updateGame">🔒 UpdateGame (admin)</option>
+          <option value="deleteGame">🔒 DeleteGame (admin)</option>
+        </select>
+        <button id="loadPreset" class="btn-secondary btn" type="button">Charger Exemple</button>
+      </div>
+
+      <div class="playground-row">
+        <div class="field">
+          <label for="query">Query</label>
+          <textarea id="query"></textarea>
+        </div>
+        <div class="field">
+          <label for="variables">Variables (JSON)</label>
+          <textarea id="variables"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="run" class="btn" type="button">Executer</button>
+        <button id="clear" class="btn-secondary btn" type="button">Vider Reponse</button>
+      </div>
+      <p id="status" class="status">Pret.</p>
+
+      <div class="field">
+        <label for="response">Reponse</label>
+        <textarea id="response" readonly></textarea>
+      </div>
+    </article>
+
+    <h2>Queries</h2>
+    <article class="card">
+      <h3>games(page, limit, genre, sortBy, order)</h3>
+      <pre>query GetGames($page: Int, $limit: Int, $genre: String, $sortBy: String, $order: String) {
+  games(page: $page, limit: $limit, genre: $genre, sortBy: $sortBy, order: $order) {
+    id
+    title
+    year
+    genres
+    studio { id name }
+  }
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>gameCount(genre)</h3>
+      <pre>query CountGames($genre: String) {
+  gameCount(genre: $genre)
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>game(id)</h3>
+      <pre>query GetGame($id: ID!) {
+  game(id: $id) {
+    id
+    title
+    year
+    reviews { id rating comment }
+  }
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>studios</h3>
+      <pre>query GetStudios {
+  studios {
+    id
+    name
+  }
+}</pre>
+    </article>
+
+    <h2>Mutations</h2>
+    <article class="card">
+      <h3>addGame(...) <span class="tag tag-admin">admin</span></h3>
+      <pre>mutation AddGame($title: String!, $year: Int!, $studioId: ID!, $genres: [String!], $imageUrl: String) {
+  addGame(title: $title, year: $year, studioId: $studioId, genres: $genres, imageUrl: $imageUrl) {
+    id
+    title
+    year
+  }
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>updateGame(...) <span class="tag tag-admin">admin</span></h3>
+      <pre>mutation UpdateGame($id: ID!, $title: String, $year: Int) {
+  updateGame(id: $id, title: $title, year: $year) {
+    id
+    title
+    year
+  }
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>deleteGame(id) <span class="tag tag-admin">admin</span></h3>
+      <pre>mutation DeleteGame($id: ID!) {
+  deleteGame(id: $id)
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>addReview(gameId, rating, comment)</h3>
+      <pre>mutation AddReview($gameId: ID!, $rating: Int!, $comment: String!) {
+  addReview(gameId: $gameId, rating: $rating, comment: $comment) {
+    id
+    rating
+    comment
+  }
+}</pre>
+    </article>
+
+    <h2>Subscriptions</h2>
+    <article class="card">
+      <h3>gameAdded</h3>
+      <pre>subscription OnGameAdded {
+  gameAdded { id title year }
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>gameUpdated</h3>
+      <pre>subscription OnGameUpdated {
+  gameUpdated { id title year }
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>gameDeleted</h3>
+      <pre>subscription OnGameDeleted {
+  gameDeleted
+}</pre>
+    </article>
+
+    <article class="card">
+      <h3>reviewAdded(gameId)</h3>
+      <pre>subscription OnReviewAdded($gameId: ID!) {
+  reviewAdded(gameId: $gameId) {
+    id
+    rating
+    comment
+  }
+}</pre>
+    </article>
+
+    <h2>Erreurs frequentes</h2>
+    <article class="card">
+      <ul>
+        <li><code>Forbidden: admin role is required for this action.</code></li>
+        <li><code>Token verification failed</code></li>
+        <li><code>MongoDB connection error</code></li>
+      </ul>
+    </article>
+
+    <p class="footer">
+      Source schema: backend/src/schema/typeDefs.js
+    </p>
+  </main>
+
+  <script>
+    const presets = {
+      games: {
+        query: `query GetGames($page: Int, $limit: Int, $genre: String, $sortBy: String, $order: String) {
+  games(page: $page, limit: $limit, genre: $genre, sortBy: $sortBy, order: $order) {
+    id
+    title
+    year
+    genres
+    studio { id name }
+  }
+}`,
+        variables: {
+          page: 1,
+          limit: 10,
+          genre: null,
+          sortBy: "title",
+          order: "asc"
+        }
+      },
+      studios: {
+        query: `query GetStudios {
+  studios {
+    id
+    name
+  }
+}`,
+        variables: {}
+      },
+      game: {
+        query: `query GetGame($id: ID!) {
+  game(id: $id) {
+    id
+    title
+    year
+    genres
+    reviews { id rating comment }
+  }
+}`,
+        variables: {
+          id: "PUT_GAME_ID_HERE"
+        }
+      },
+      addReview: {
+        query: `mutation AddReview($gameId: ID!, $rating: Int!, $comment: String!) {
+  addReview(gameId: $gameId, rating: $rating, comment: $comment) {
+    id
+    rating
+    comment
+  }
+}`,
+        variables: {
+          gameId: "PUT_GAME_ID_HERE",
+          rating: 9,
+          comment: "Great game"
+        }
+      },
+      addGame: {
+        query: `mutation AddGame($title: String!, $year: Int!, $genres: [String!]!, $studioId: ID!) {
+  addGame(title: $title, year: $year, genres: $genres, studioId: $studioId) {
+    id
+    title
+    year
+    genres
+    studio { id name }
+  }
+}`,
+        variables: {
+          title: "New Awesome Game",
+          year: 2024,
+          genres: ["Action", "Adventure"],
+          studioId: "PUT_STUDIO_ID_HERE"
+        }
+      },
+      updateGame: {
+        query: `mutation UpdateGame($id: ID!, $title: String, $year: Int) {
+  updateGame(id: $id, title: $title, year: $year) {
+    id
+    title
+    year
+    genres
+  }
+}`,
+        variables: {
+          id: "PUT_GAME_ID_HERE",
+          title: "Updated Title",
+          year: 2025
+        }
+      },
+      deleteGame: {
+        query: `mutation DeleteGame($id: ID!) {
+  deleteGame(id: $id)
+}`,
+        variables: {
+          id: "PUT_GAME_ID_HERE"
+        }
+      }
+    };
+
+    const endpointEl = document.getElementById("endpoint");
+    const tokenEl = document.getElementById("token");
+    const presetEl = document.getElementById("preset");
+    const queryEl = document.getElementById("query");
+    const variablesEl = document.getElementById("variables");
+    const responseEl = document.getElementById("response");
+    const statusEl = document.getElementById("status");
+
+    function loadPreset(name) {
+      const preset = presets[name];
+      queryEl.value = preset.query;
+      variablesEl.value = JSON.stringify(preset.variables, null, 2);
+      statusEl.textContent = `Exemple charge: ${name}`;
+    }
+
+    document.getElementById("loadPreset").addEventListener("click", () => {
+      loadPreset(presetEl.value);
+    });
+
+    document.getElementById("clear").addEventListener("click", () => {
+      responseEl.value = "";
+      statusEl.textContent = "Reponse videe.";
+    });
+
+    document.getElementById("toggleTokenVisibility").addEventListener("click", () => {
+      const input = document.getElementById("token");
+      if (input.type === "password") {
+        input.type = "text";
+        document.getElementById("toggleTokenVisibility").textContent = "🔒";
+      } else {
+        input.type = "password";
+        document.getElementById("toggleTokenVisibility").textContent = "👁️";
+      }
+    });
+
+    document.getElementById("clearToken").addEventListener("click", () => {
+      tokenEl.value = "";
+      statusEl.textContent = "Token effacé.";
+    });
+
+    document.getElementById("run").addEventListener("click", async () => {
+      const endpoint = endpointEl.value.trim();
+      const token = tokenEl.value.trim();
+      const query = queryEl.value;
+
+      let variables = {};
+      try {
+        variables = variablesEl.value.trim() ? JSON.parse(variablesEl.value) : {};
+      } catch (err) {
+        statusEl.textContent = "JSON des variables invalide.";
+        responseEl.value = err.message;
+        return;
+      }
+
+      statusEl.textContent = "Execution en cours...";
+      responseEl.value = "";
+
+      try {
+        const headers = { "Content-Type": "application/json" };
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ query, variables })
+        });
+
+        const data = await res.json();
+        responseEl.value = JSON.stringify(data, null, 2);
+        statusEl.textContent = `Termine (HTTP ${res.status}).`;
+      } catch (err) {
+        responseEl.value = String(err);
+        statusEl.textContent = "Erreur reseau/CORS. Verifie que le backend est demarre.";
+      }
+    });
+
+    loadPreset("games");
+  </script>
+</body>
+</html>

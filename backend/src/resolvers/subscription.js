@@ -1,4 +1,3 @@
-// src/resolvers/subscription.js
 const { PubSub } = require('graphql-subscriptions');
 const pubsub = new PubSub();
 

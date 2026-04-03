@@ -1,4 +1,3 @@
-// src/resolvers/query.js
 const Game   = require('../models/Game');
 const Studio = require('../models/Studio');
 

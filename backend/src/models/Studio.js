@@ -1,4 +1,3 @@
-// src/models/Studio.js
 const mongoose = require('mongoose');
 
 const studioSchema = new mongoose.Schema({

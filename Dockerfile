@@ -1,13 +1,13 @@
 FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /app/backend
 
 # Install backend dependencies
-COPY package.json package-lock.json* ./
+COPY backend/package.json backend/package-lock.json* ./
 RUN npm install --production || npm install --only=production
 
 # Copy backend source only
-COPY src ./src
+COPY backend/src ./src
 
 ENV NODE_ENV=production
 

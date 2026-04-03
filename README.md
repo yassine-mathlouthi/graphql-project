@@ -2,30 +2,42 @@
 
 This repository is a small GraphQL server implementation using Apollo Server and MongoDB. It includes implemented models, schema, resolvers, a seed script, and simple JWT-based auth helpers.
 
+API documentation:
+- `docs/API.md`
+- `docs/api-reference.html`
+
 <img width="1440" height="1312" alt="image" src="https://github.com/user-attachments/assets/0c7c135b-1d9e-4488-adb5-15fe5ee2c2ad" />
 
 
 Project highlights
-- `src/index.js` — application entry. Loads environment variables (`dotenv`), connects to MongoDB, and starts Apollo Server.
-- `src/db/connect.js` — MongoDB connection helper using `mongoose` and `process.env.MONGO_URI`.
-- `src/seed.js` — script that seeds studios, games, and reviews into the database.
-- `src/auth.js` — `generateToken` / `verifyToken` using `JWT_SECRET` from `.env`.
-- `src/models/` — Mongoose models: `Game.js`, `Studio.js`, `Review.js`.
-- `src/schema/typeDefs.js` — GraphQL type definitions.
-- `src/resolvers/` — resolvers for `Query`, `Mutation`, `Subscription`, and type resolvers (`types.js`).
+- `backend/src/index.js` — application entry. Loads environment variables (`dotenv`), connects to MongoDB, and starts Apollo Server.
+- `backend/src/db/connect.js` — MongoDB connection helper using `mongoose` and `process.env.MONGO_URI`.
+- `backend/src/seed.js` — script that seeds studios, games, and reviews into the database.
+- `backend/src/auth.js` — `generateToken` / `verifyToken` using `JWT_SECRET` from `.env`.
+- `backend/src/models/` — Mongoose models: `Game.js`, `Studio.js`, `Review.js`.
+- `backend/src/schema/typeDefs.js` — GraphQL type definitions.
+- `backend/src/resolvers/` — resolvers for `Query`, `Mutation`, `Subscription`, and type resolvers (`types.js`).
 
 Prerequisites
 - Node.js (v16+ recommended)
 - A running MongoDB instance (local or remote)
 
 Setup
-1. Install dependencies:
+1. Install backend dependencies:
 
 ```bash
+cd backend
 npm install
 ```
 
-2. Ensure the `.env` file at the project root contains:
+2. Install frontend dependencies:
+
+```bash
+cd ../frontend
+npm install
+```
+
+3. Ensure the backend `.env` file at `backend/.env` contains:
 
 ```text
 MONGO_URI=mongodb://localhost:27017/graphql_project
@@ -36,7 +48,8 @@ Seeding the database
 Run the seed script to populate sample `studios`, `games`, and `reviews`:
 
 ```powershell
-node src/seed.js
+cd backend
+npm run seed
 ```
 
 You should see output similar to:
@@ -52,7 +65,8 @@ Starting the server
 Start the GraphQL server with:
 
 ```powershell
-node src/index.js
+cd backend
+npm run dev
 ```
 
 Expected output when successful:
@@ -63,7 +77,7 @@ API ready at http://localhost:4000/
 ```
 
 Authentication
-- `src/auth.js` exposes `generateToken(user)` and `verifyToken(token)`. `src/index.js` uses `verifyToken` in the Apollo `context` to populate `context.user` from the `Authorization: Bearer <token>` header. Most mutations check `context.user` and will throw `Unauthorized` if missing.
+- `backend/src/auth.js` exposes `generateToken(user)` and `verifyToken(token)`. `backend/src/index.js` uses `verifyToken` in the Apollo `context` to populate `context.user` from the `Authorization: Bearer <token>` header. Most mutations check `context.user` and will throw `Unauthorized` if missing.
 
 Examples (use GraphQL playground)
 

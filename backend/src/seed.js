@@ -1,4 +1,3 @@
-// src/seed.js
 const mongoose = require('mongoose');
 const Game     = require('./models/Game');
 const Studio   = require('./models/Studio');

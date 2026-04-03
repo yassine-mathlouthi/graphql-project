@@ -1,4 +1,3 @@
-// src/auth.js
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
@@ -32,4 +31,3 @@ function verifyToken(token) {
 }
 
 module.exports = { verifyToken };
-

@@ -55,7 +55,7 @@ Installez le package pour récupérer dynamiquement les clés de signature :
 npm install jwks-rsa jsonwebtoken
 ```
 
-### Le fichier d'authentification (`src/auth.js`)
+### Le fichier d'authentification (`backend/src/auth.js`)
 Voici le script qui interroge Keycloak pour valider la signature du Token :
 
 ```javascript
@@ -94,7 +94,7 @@ function verifyToken(token) {
 module.exports = { verifyToken };
 ```
 
-### Sécuriser les appels (`src/index.js`)
+### Sécuriser les appels (`backend/src/index.js`)
 Dans votre ApolloServer, utilisez le contexte (`context`) pour bloquer toute requête HTTP ou WebSocket qui ne possède pas de `Bearer Token` valide.
 
 ```javascript
