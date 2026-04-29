@@ -1,4 +1,3 @@
-// src/resolvers/mutation.js
 const Game   = require('../models/Game');
 const Studio = require('../models/Studio');
 const Review = require('../models/Review');
@@ -90,7 +89,7 @@ module.exports = {
   updateGame: async (_, { id, ...updates }, { isAdmin }) => {
     requireAdmin(isAdmin);
 
-    const game = await Game.findByIdAndUpdate(id, updates, { new: true }).populate('studio');
+    const game = await Game.findByIdAndUpdate(id, updates, { returnDocument: 'after' }).populate('studio');
     pubsub.publish('GAME_UPDATED', { gameUpdated: game });
     return game;
   },

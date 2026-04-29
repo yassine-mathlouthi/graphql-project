@@ -1,9 +1,12 @@
 {
-  "name": "graphql-project",
+  "name": "graphql-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "main": "src/index.js",
   "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "seed": "node src/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,12 +14,20 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@graphql-tools/schema": "^10.0.0",
     "apollo-server": "^3.13.0",
+    "apollo-server-core": "^3.13.0",
+    "apollo-server-express": "^3.13.0",
     "dotenv": "^17.3.1",
+    "express": "^4.21.2",
     "graphql": "^16.13.2",
     "graphql-subscriptions": "^3.0.0",
     "graphql-ws": "^5.16.2",
     "jsonwebtoken": "^9.0.3",
+<<<<<<< HEAD:package.json
+=======
+    "jwks-rsa": "^3.2.2",
+>>>>>>> 0a47ef5249ad467dca169664e5f4f256d4afc8a9:backend/package.json
     "mongoose": "^9.3.3",
     "ws": "^8.20.0"
   },

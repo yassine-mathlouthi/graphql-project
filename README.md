@@ -65,19 +65,11 @@ The app manages a catalog of games, their studios, and user reviews.
 From the project root:
 
 ```bash
+cd ../frontend
 npm install
 ```
 
-From the frontend folder:
-
-```bash
-cd frontend
-npm install
-```
-
-### 2) Configure backend environment
-
-Create a root `.env` file with at least:
+2. Ensure the `.env` file at the project root contains:
 
 ```env
 MONGO_URI=mongodb://localhost:27017/graphql_project
@@ -94,16 +86,7 @@ Notes:
 
 Create `frontend/.env`:
 
-```env
-VITE_GRAPHQL_HTTP_URL=http://localhost:4000/graphql
-VITE_GRAPHQL_WS_URL=ws://localhost:4000/graphql
-```
-
-### 4) Seed data
-
-From the project root:
-
-```bash
+```powershell
 node src/seed.js
 ```
 
@@ -120,7 +103,7 @@ Seeded:
 
 From the project root:
 
-```bash
+```powershell
 node src/index.js
 ```
 
@@ -128,260 +111,15 @@ Expected logs:
 
 ```text
 MongoDB connected
-Server ready at http://localhost:4000/graphql
-Subscriptions ready at ws://localhost:4000/graphql
+API ready at http://localhost:4000/
 ```
 
-### 6) Start the frontend
+Authentication
+- `src/auth.js` exposes `generateToken(user)` and `verifyToken(token)`. `src/index.js` uses `verifyToken` in the Apollo `context` to populate `context.user` from the `Authorization: Bearer <token>` header. Most mutations check `context.user` and will throw `Unauthorized` if missing.
 
-From the `frontend` folder:
+Examples (use GraphQL playground)
 
-```bash
-npm run dev
-```
-
-Open the Vite URL shown in the terminal, usually `http://localhost:5173`.
-
-### 7) Create your first account
-
-Open the session menu in the header and register a user.
-
-- The first registered account is promoted to `admin`.
-- Later accounts become standard members unless they provide the configured admin invite code.
-
----
-
-## How-to Guides
-
-### How to sign in and out
-
-1. Open the session menu in the header.
-2. Choose `Sign in` or `Register`.
-3. Submit your email and password.
-4. Use `Logout` from the same menu to clear the local session.
-
-### How to add a game as admin
-
-1. Register the first account or use a valid admin invite code.
-2. Open `/add-game`.
-3. Fill title, year, studio, genres, and optional image URL.
-4. Submit the form to trigger `addGame`.
-5. Connected clients receive a `gameAdded` subscription event.
-
-### How to update or delete a game
-
-1. Open `/game/:id`.
-2. If you are admin, use:
-   - Edit form -> `updateGame`
-   - Delete button -> `deleteGame`
-3. The backend emits `gameUpdated` or `gameDeleted`.
-
-### How to add a review
-
-1. Open `/game/:id/add-review`.
-2. Submit a rating from `1` to `10` and a comment.
-3. The backend creates the review and publishes `reviewAdded(gameId)`.
-4. The details page updates through `subscribeToMore`.
-
-### How to filter and sort games
-
-On the home page:
-
-- Filter by genre
-- Sort by `title` or `year`
-- Choose ascending or descending order
-- Move through paginated results
-
----
-
-## Reference: Architecture and Source Code
-
-### Repository structure
-
-```text
-graphql-project/
-  src/                    # Backend
-  frontend/               # Frontend
-  Dockerfile              # Backend containerization
-  README.md               # This file
-```
-
-### Backend reference (`src`)
-
-#### `src/index.js`
-
-Responsibilities:
-
-- Loads environment variables
-- Connects to MongoDB
-- Builds the executable GraphQL schema
-- Starts both HTTP and WebSocket servers
-- Builds auth context from Bearer tokens
-
-Auth context fields:
-
-- `user`: decoded JWT payload or `null`
-- `roles`: role array from token payload
-- `isAdmin`: `roles.includes('admin')`
-
-#### `src/auth.js`
-
-Responsibilities:
-
-- Hashes passwords with `crypto.pbkdf2Sync`
-- Verifies passwords using timing-safe comparison
-- Signs app-issued JWTs
-- Verifies JWTs using `AUTH_JWT_SECRET`
-- Produces safe user payloads for GraphQL responses
-
-#### `src/models/User.js`
-
-Mongoose user fields:
-
-- `username`
-- `email`
-- `passwordHash`
-- `passwordSalt`
-- `roles`
-
-#### `src/schema/typeDefs.js`
-
-Defines:
-
-- Domain types: `Game`, `Studio`, `Review`
-- Auth types: `AuthUser`, `AuthPayload`
-- Queries, mutations, and subscriptions
-
-#### `src/resolvers/query.js`
-
-Implements:
-
-- `me`
-- `games(page, limit, genre, sortBy, order)`
-- `gameCount(genre)`
-- `game(id)`
-- `studios()`
-
-#### `src/resolvers/mutation.js`
-
-Implements:
-
-- `register(username, email, password, adminCode)`
-- `login(email, password)`
-- `addGame(...)`
-- `updateGame(id, updates)`
-- `deleteGame(id)`
-- `addReview(gameId, rating, comment)`
-
-Behavior notes:
-
-- The first registered user becomes admin automatically.
-- `ADMIN_INVITE_CODE` can elevate later registrations.
-- `addReview` validates the `1..10` rating range.
-
-#### `src/resolvers/subscription.js`
-
-Uses in-process `graphql-subscriptions` PubSub.
-
-Channels:
-
-- `GAME_ADDED`
-- `GAME_UPDATED`
-- `GAME_DELETED`
-- `REVIEW_ADDED_<gameId>`
-
-#### `src/resolvers/types.js`
-
-Field resolvers:
-
-- `Game.id`
-- `Studio.id`
-- `Review.id`
-- `Game.reviews`
-- `Studio.games`
-
-#### `src/seed.js`
-
-Responsibilities:
-
-- Connects to MongoDB
-- Clears `Game`, `Studio`, and `Review`
-- Inserts predefined data
-- Logs a summary and disconnects
-
-### Frontend reference (`frontend/src`)
-
-#### `frontend/src/main.jsx`
-
-Responsibilities:
-
-- Bootstraps the React app
-- Loads global styling
-- Renders the main application directly
-
-#### `frontend/src/auth/session.js`
-
-Responsibilities:
-
-- Stores auth session data in `localStorage`
-- Exposes the current token for Apollo links
-- Broadcasts auth state changes to React consumers
-
-#### `frontend/src/auth/useAuthSession.js`
-
-Responsibilities:
-
-- Subscribes React components to auth session changes
-- Exposes `isAuthenticated`, `isAdmin`, token, and user info
-
-#### `frontend/src/apollo/client.jsx`
-
-Responsibilities:
-
-- Builds HTTP and WebSocket Apollo links
-- Injects the current Bearer token into both transports
-- Splits subscriptions to WebSocket
-- Configures cache behavior for `Query.games`
-
-#### `frontend/src/components/Layout.jsx`
-
-Responsibilities:
-
-- Renders the app shell
-- Hosts the sign-in and registration UI
-- Stores successful auth payloads locally
-- Shows admin-only navigation when allowed
-
-#### `frontend/src/pages/AddGame.jsx`
-
-Responsibilities:
-
-- Protects the create screen behind `isAdmin`
-- Loads studios for the selector
-- Submits `ADD_GAME`
-
-#### `frontend/src/pages/GameDetails.jsx`
-
-Responsibilities:
-
-- Loads one game by id
-- Subscribes to `reviewAdded(gameId)`
-- Supports inline admin edits and deletes
-- Displays ratings on a `10` point scale
-
-#### `frontend/src/pages/AddReview.jsx`
-
-Responsibilities:
-
-- Submits anonymous reviews
-- Uses the updated `1..10` rating scale
-- Refetches the game after submission
-
----
-
-## Reference: GraphQL API
-
-### Types
+Query: list games (pagination, sort and optional genre filter)
 
 ```graphql
 type Game {

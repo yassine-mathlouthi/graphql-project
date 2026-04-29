@@ -1,4 +1,3 @@
-// src/resolvers/types.js
 module.exports = {
   Game: {
     id: (parent) => parent._id.toString(),

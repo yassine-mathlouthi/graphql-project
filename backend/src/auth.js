@@ -1,4 +1,7 @@
+<<<<<<< HEAD:src/auth.js
 const crypto = require('crypto');
+=======
+>>>>>>> 0a47ef5249ad467dca169664e5f4f256d4afc8a9:backend/src/auth.js
 const jwt = require('jsonwebtoken');
 
 const AUTH_JWT_SECRET = process.env.AUTH_JWT_SECRET || 'atlas-dev-secret-change-me';
@@ -61,6 +64,7 @@ function verifyToken(token) {
   return Promise.resolve(jwt.verify(token, AUTH_JWT_SECRET));
 }
 
+<<<<<<< HEAD:src/auth.js
 module.exports = {
   hashPassword,
   signToken,
@@ -68,3 +72,6 @@ module.exports = {
   verifyPassword,
   verifyToken,
 };
+=======
+module.exports = { verifyToken };
+>>>>>>> 0a47ef5249ad467dca169664e5f4f256d4afc8a9:backend/src/auth.js

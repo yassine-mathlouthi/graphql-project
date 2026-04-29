@@ -1,4 +1,3 @@
-// src/index.js
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server-express');
 const { createServer } = require('http');
