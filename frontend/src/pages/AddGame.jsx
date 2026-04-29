@@ -65,7 +65,7 @@ export default function AddGame() {
   return (
     <div className="max-w-2xl mx-auto atlas-panel overflow-hidden">
       <div className="atlas-panel-topper" />
-      <div className="p-6 border-b border-[var(--atlas-line)] bg-[rgba(117,92,67,0.05)]">
+      <div className="p-6 border-b border-[var(--atlas-line)] bg-[linear-gradient(135deg,rgba(122,247,255,0.08),rgba(255,77,166,0.08))]">
         <h1 className="text-3xl font-bold text-[var(--atlas-ink)] atlas-display">Add New Game</h1>
         <p className="text-sm text-[var(--atlas-muted)] mt-1">Capture a new title, its studio, and the genre trail it belongs to.</p>
       </div>

@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { ADD_REVIEW } from '../graphql/mutations';
 import { GET_GAME } from '../graphql/queries';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Sparkles, Star } from 'lucide-react';
 
 export default function AddReview() {
   const { id } = useParams();
@@ -32,68 +32,111 @@ export default function AddReview() {
     });
   };
 
+  const ratingLabel =
+    formData.rating >= 9 ? 'Legendary'
+    : formData.rating >= 7 ? 'Excellent'
+    : formData.rating >= 5 ? 'Solid'
+    : formData.rating >= 3 ? 'Mixed'
+    : 'Rough';
+
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       <Link 
         to={`/game/${id}`} 
-        className="inline-flex items-center text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors uppercase tracking-widest gap-2 group mb-8"
+        className="inline-flex items-center text-sm font-bold text-[var(--atlas-muted)] hover:text-[var(--atlas-ink)] transition-colors uppercase tracking-widest gap-2 group mb-8"
       >
         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
         Back to Project
       </Link>
 
-      <div className="border border-gray-200 bg-white">
-        <div className="p-6 border-b border-gray-200 bg-gray-50">
-          <h1 className="text-2xl font-bold text-gray-900">Add Performance Review</h1>
+      <div className="atlas-panel overflow-hidden">
+        <div className="atlas-panel-topper" />
+
+        <div className="px-6 py-8 md:px-8 border-b border-[var(--atlas-line)] bg-[linear-gradient(135deg,rgba(255,255,255,0.72),rgba(200,100,59,0.08))]">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-3">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(166,57,18,0.18)] bg-[rgba(200,100,59,0.08)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--atlas-accent-deep)]">
+                <Sparkles size={14} />
+                Anonymous Review Desk
+              </span>
+              <div>
+                <h1 className="atlas-display text-4xl text-[var(--atlas-ink)] leading-none">Add Your Verdict</h1>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--atlas-muted)]">
+                  Leave a sharp, anonymous take on this game. Score it with stars, then explain what landed or what missed.
+                </p>
+              </div>
+            </div>
+
+            <div className="atlas-info-block min-w-[160px]">
+              <p className="text-[11px] uppercase tracking-[0.24em] font-bold text-[var(--atlas-muted)]">Current score</p>
+              <p className="atlas-display mt-2 text-4xl text-[var(--atlas-ink)]">{formData.rating}<span className="text-lg text-[var(--atlas-muted)]">/10</span></p>
+              <p className="mt-1 text-sm font-semibold text-[var(--atlas-accent-deep)]">{ratingLabel}</p>
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="p-3 border border-gray-200 bg-gray-50 text-sm text-gray-700">
+        <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
+          <div className="rounded-[1.5rem] border border-[var(--atlas-line)] bg-[rgba(255,255,255,0.62)] p-4 text-sm leading-6 text-[var(--atlas-muted)]">
             Reviews are submitted anonymously. You can share feedback without displaying your identity.
           </div>
 
           {error && (
-            <div className="p-4 bg-red-50 text-red-700 border border-red-200 text-sm font-medium">
+            <div className="rounded-2xl border border-[rgba(166,57,18,0.2)] bg-[rgba(230,114,57,0.08)] p-4 text-sm font-medium text-[#8b3417]">
               Error: {error.message}
             </div>
           )}
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
-                Rating (1-10)
-              </label>
-              <select
-                required
-                className="w-full p-3 border border-gray-300 focus:border-gray-900 focus:ring-0 outline-none bg-white transition-colors"
-                value={formData.rating}
-                onChange={(e) => setFormData(prev => ({ ...prev, rating: e.target.value }))}
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-                  <option key={num} value={num}>{num}</option>
-                ))}
-              </select>
+          <div className="space-y-6">
+            <div className="rounded-[1.75rem] border border-[var(--atlas-line)] bg-[rgba(255,253,248,0.84)] p-5 md:p-6">
+              <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <label className="atlas-field-label">Star rating</label>
+                  <h2 className="atlas-display mt-2 text-2xl text-[var(--atlas-ink)]">Make the stars mean something</h2>
+                </div>
+                <p className="text-sm text-[var(--atlas-muted)]">Tap a star to set a score from 1 to 10.</p>
+              </div>
+
+              <div className="mt-6 grid grid-cols-5 gap-3 sm:grid-cols-10">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => {
+                  const active = num <= formData.rating;
+
+                  return (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, rating: num }))}
+                      className={`atlas-rating-star ${active ? 'atlas-rating-star-active' : ''}`}
+                      aria-label={`Set rating to ${num} out of 10`}
+                      aria-pressed={formData.rating === num}
+                    >
+                      <Star size={22} fill={active ? 'currentColor' : 'transparent'} />
+                      <span className="text-[11px] font-bold">{num}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+              <label className="atlas-field-label mb-3">
                 Observation / Comment
               </label>
               <textarea
                 required
-                rows={4}
-                className="w-full p-3 border border-gray-300 focus:border-gray-900 focus:ring-0 outline-none transition-colors resize-y"
+                rows={6}
+                className="atlas-input min-h-[180px] resize-y"
                 value={formData.comment}
                 onChange={(e) => setFormData(prev => ({ ...prev, comment: e.target.value }))}
+                placeholder="What stood out: atmosphere, combat, pacing, story, performance, or anything players should know."
               />
             </div>
           </div>
 
-          <div className="pt-6 mt-6 border-t border-gray-200 flex justify-end gap-3">
+          <div className="pt-6 mt-6 border-t border-[var(--atlas-line)] flex justify-end gap-3">
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-gray-900 text-white font-bold hover:bg-gray-800 disabled:opacity-50 transition-colors uppercase tracking-widest text-sm"
+              className="atlas-primary-button"
             >
               {loading ? 'Submitting...' : 'Submit Review'}
             </button>

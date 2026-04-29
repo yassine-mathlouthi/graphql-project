@@ -1,10 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { Outlet, Link } from 'react-router-dom';
-import { Gamepad2, ChevronDown, Shield, LogOut, LogIn, UserRound, UserPlus, Sparkles, KeyRound } from 'lucide-react';
+import { ChevronDown, Shield, LogOut, LogIn, UserRound, UserPlus, Sparkles, KeyRound } from 'lucide-react';
 import { LOGIN, REGISTER } from '../graphql/mutations';
 import { clearAuthSession, saveAuthSession } from '../auth/session';
 import { useAuthSession } from '../auth/useAuthSession';
+
+function AtlasLogo() {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      aria-hidden="true"
+      className="atlas-logo-svg"
+    >
+      <defs>
+        <linearGradient id="atlasPeak" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f6d1b4" />
+          <stop offset="55%" stopColor="#d97a4a" />
+          <stop offset="100%" stopColor="#8f3f22" />
+        </linearGradient>
+      </defs>
+      <path d="M12 49 28 14h8l16 35h-9l-4.5-10h-13L21 49Z" fill="url(#atlasPeak)" />
+      <path d="M31 22 22.5 41h6.8l3.7-8.5 3.8 8.5h6.7L35 22Z" fill="#fff7ef" opacity="0.95" />
+      <circle cx="48" cy="17" r="4" fill="#fff7ef" opacity="0.9" />
+    </svg>
+  );
+}
 
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -83,15 +104,15 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col text-[var(--atlas-ink)]">
-      <header className="sticky top-0 z-20 border-b border-[var(--atlas-line)] bg-[rgba(255,251,245,0.86)] backdrop-blur-md">
+      <header className="sticky top-0 z-20 border-b border-[var(--atlas-line)] bg-[rgba(13,17,31,0.84)] backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2 group">
             <div className="atlas-brand-mark group-hover:translate-y-[-1px] transition-transform">
-              <Gamepad2 size={24} />
+              <AtlasLogo />
             </div>
             <div>
               <span className="atlas-wordmark">Atlas</span>
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--atlas-muted)]">Games Registry</p>
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--atlas-glow-soft)]">Games Registry</p>
             </div>
           </Link>
 
@@ -113,10 +134,10 @@ export default function Layout() {
               <span className="h-8 w-8 rounded-full bg-[var(--atlas-ink)] text-[var(--atlas-surface)] inline-flex items-center justify-center shadow-[0_8px_20px_rgba(40,24,12,0.18)]">
                 <UserRound size={14} />
               </span>
-              <span className="hidden sm:inline text-sm font-semibold max-w-[160px] truncate">
+              <span className="hidden sm:inline text-sm font-semibold max-w-[160px] truncate text-[var(--atlas-surface)]">
                 {userState.user?.username || 'Guest Access'}
               </span>
-              <ChevronDown size={16} className={`text-[var(--atlas-muted)] transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown size={16} className={`text-[var(--atlas-glow-soft)] transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {menuOpen && (
@@ -263,7 +284,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-[var(--atlas-line)] bg-[rgba(255,251,245,0.78)] py-6 mt-12">
+      <footer className="border-t border-[var(--atlas-line)] bg-[rgba(9,12,23,0.86)] py-6 mt-12">
         <div className="max-w-6xl mx-auto px-4 text-center text-sm text-[var(--atlas-muted)] font-medium">
           &copy; {new Date().getFullYear()} Atlas Games Database. Local auth, live updates, and studio cataloging in one place.
         </div>

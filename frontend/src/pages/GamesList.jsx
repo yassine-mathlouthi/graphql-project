@@ -10,6 +10,8 @@ import {
   ArrowUp,
   ArrowDown,
   SlidersHorizontal,
+  Sparkles,
+  Trophy,
 } from 'lucide-react';
 
 export default function GamesList() {
@@ -77,33 +79,54 @@ export default function GamesList() {
 
   return (
     <div className="space-y-8 pb-10">
-      <div className="flex justify-between items-end border-b border-gray-200 pb-4">
-        <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Database Index</h1>
-          <p className="text-gray-500 mt-1">Listing all available projects from the current schema.</p>
-        </div>
-        <div className="text-sm font-semibold text-gray-500">
-          Showing {games.length} of {gameCount} record(s) 
-        </div>
-      </div>
+      <section className="atlas-hero-panel overflow-hidden">
+        <div className="atlas-hero-grid" />
+        <div className="relative p-6 md:p-8 lg:p-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl space-y-4">
+            <span className="atlas-kicker">
+              <Sparkles size={14} />
+              Live Gaming Archive
+            </span>
+            <div>
+              <h1 className="atlas-display text-4xl md:text-5xl lg:text-6xl text-[var(--atlas-ink)] leading-[0.92]">
+                Discover worlds, studios, and player verdicts in one arena.
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm md:text-base leading-7 text-[var(--atlas-muted)]">
+                Atlas now feels like a game vault: browse standout releases, filter by genre, and dive into live community reviews with a stronger arcade-catalog energy.
+              </p>
+            </div>
+          </div>
 
-      <section className="relative overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gray-900 via-gray-600 to-gray-900" />
+          <div className="grid grid-cols-2 gap-4 lg:min-w-[320px]">
+            <div className="atlas-stat-card">
+              <p className="atlas-stat-label">Visible now</p>
+              <p className="atlas-stat-value">{games.length}</p>
+            </div>
+            <div className="atlas-stat-card">
+              <p className="atlas-stat-label">In archive</p>
+              <p className="atlas-stat-value">{gameCount}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="atlas-panel relative overflow-hidden">
+        <div className="atlas-panel-topper" />
         <div className="p-4 sm:p-5 flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between">
           <div className="space-y-2">
-            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-gray-500">
+            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[var(--atlas-muted)]">
               <SlidersHorizontal size={14} /> Refine View
             </span>
-            <h2 className="text-lg font-bold text-gray-900">Filter and Sort Projects</h2>
+            <h2 className="text-lg font-bold text-[var(--atlas-ink)]">Filter and Sort Games</h2>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <label className="flex flex-col gap-1">
-              <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">Genre</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--atlas-muted)]">Genre</span>
               <select
                 value={selectedGenre}
                 onChange={e => setSelectedGenre(e.target.value)}
-                className="min-w-[170px] h-11 px-3 border border-gray-300 rounded-md bg-gray-50 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-shadow"
+                className="atlas-select-control"
               >
                 <option value="all">All genres</option>
                 {genreCatalog.map(genreName => (
@@ -115,11 +138,11 @@ export default function GamesList() {
             </label>
 
             <label className="flex flex-col gap-1">
-              <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">Sort by</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--atlas-muted)]">Sort by</span>
               <select
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
-                className="min-w-[170px] h-11 px-3 border border-gray-300 rounded-md bg-gray-50 text-sm font-semibold text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-shadow"
+                className="atlas-select-control"
               >
                 <option value="title">Title</option>
                 <option value="year">Year</option>
@@ -127,15 +150,15 @@ export default function GamesList() {
             </label>
 
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">Direction</span>
-              <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 p-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--atlas-muted)]">Direction</span>
+              <div className="flex items-center gap-2 rounded-[1rem] border border-[var(--atlas-line)] bg-[rgba(255,255,255,0.56)] p-1">
                 <button
                   type="button"
                   onClick={() => setOrder('asc')}
                   className={`h-9 px-3 rounded flex items-center gap-1 text-sm font-semibold transition-colors ${
                     order === 'asc'
-                      ? 'bg-gray-900 text-white shadow-sm'
-                      : 'text-gray-700 hover:bg-gray-200'
+                      ? 'bg-[var(--atlas-ink)] text-[var(--atlas-surface)] shadow-sm'
+                      : 'text-[var(--atlas-muted)] hover:bg-[rgba(200,100,59,0.08)]'
                   }`}
                 >
                   <ArrowUp size={15} /> Up
@@ -145,8 +168,8 @@ export default function GamesList() {
                   onClick={() => setOrder('desc')}
                   className={`h-9 px-3 rounded flex items-center gap-1 text-sm font-semibold transition-colors ${
                     order === 'desc'
-                      ? 'bg-gray-900 text-white shadow-sm'
-                      : 'text-gray-700 hover:bg-gray-200'
+                      ? 'bg-[var(--atlas-ink)] text-[var(--atlas-surface)] shadow-sm'
+                      : 'text-[var(--atlas-muted)] hover:bg-[rgba(200,100,59,0.08)]'
                   }`}
                 >
                   <ArrowDown size={15} /> Down
@@ -161,7 +184,7 @@ export default function GamesList() {
                 setSortBy('title');
                 setOrder('asc');
               }}
-              className="h-11 px-4 self-end border border-gray-300 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors"
+              className="atlas-ghost-button h-11 px-4 self-end"
             >
               Reset
             </button>
@@ -174,36 +197,39 @@ export default function GamesList() {
           <Link 
             key={game.id} 
             to={`/game/${game.id}`}
-            className="group block border border-gray-200 bg-white hover:border-gray-900 hover:shadow-[4px_4px_0_0_#111827] transition-all flex flex-col"
+            className="group atlas-game-card flex flex-col"
           >
             {game.imageUrl ? (
               <img 
                 src={game.imageUrl} 
                 alt={game.title} 
-                className="w-full aspect-[4/3] object-cover border-b border-gray-200"
+                className="w-full aspect-[4/3] object-cover border-b border-[rgba(255,255,255,0.08)]"
               />
             ) : (
-              <div className="w-full aspect-[4/3] bg-gray-100 flex items-center justify-center border-b border-gray-200 text-gray-400">
-                <span className="text-sm font-semibold uppercase tracking-widest">No Image</span>
+              <div className="w-full aspect-[4/3] atlas-game-card-fallback">
+                <div className="text-center">
+                  <Trophy size={28} className="mx-auto mb-3 text-[var(--atlas-accent)]" />
+                  <span className="text-sm font-semibold uppercase tracking-widest text-[var(--atlas-muted)]">No Key Art</span>
+                </div>
               </div>
             )}
             <div className="p-5 flex-grow flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-bold text-gray-900 group-hover:underline decoration-2 underline-offset-4">
+                  <h2 className="text-xl font-bold text-[var(--atlas-surface)] group-hover:text-[var(--atlas-glow)] transition-colors">
                     {game.title}
                   </h2>
-                  <span className="p-1 rounded bg-gray-100 text-gray-600 group-hover:bg-gray-900 group-hover:text-white transition-colors shrink-0 ml-2">
+                  <span className="atlas-game-card-arrow shrink-0 ml-2">
                     <ChevronRight size={18} />
                   </span>
                 </div>
                 
-                <div className="flex flex-col gap-2 text-sm text-gray-600">
+                <div className="flex flex-col gap-2 text-sm text-[rgba(234,239,255,0.76)]">
                   <span className="flex items-center gap-2 font-medium">
-                    <Calendar size={16} className="text-gray-400" /> {game.year}
+                    <Calendar size={16} className="text-[var(--atlas-accent)]" /> {game.year}
                   </span>
                   <span className="flex items-center gap-2 font-medium">
-                    <Building size={16} className="text-gray-400" /> {game.studio.name}
+                    <Building size={16} className="text-[var(--atlas-accent)]" /> {game.studio.name}
                   </span>
                 </div>
               </div>
@@ -211,7 +237,7 @@ export default function GamesList() {
               <div className="mt-6 flex flex-wrap gap-2">
                 {game.genres.map(genre => (
                   <span 
-                    className="inline-flex items-center px-2 py-1 text-xs font-semibold bg-gray-100 border border-gray-200 text-gray-800 uppercase tracking-widest"
+                    className="atlas-genre-chip"
                     key={genre}
                   >
                     {genre}
@@ -224,11 +250,11 @@ export default function GamesList() {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 pt-6 border-t border-gray-200">
+        <div className="flex justify-center items-center gap-2 pt-6 border-t border-[var(--atlas-line)]">
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            className="p-2 flex items-center gap-1 border border-gray-300 rounded font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="atlas-page-button px-3"
           >
             <ChevronLeft size={18} /> Prev
           </button>
@@ -242,8 +268,8 @@ export default function GamesList() {
                   onClick={() => setCurrentPage(pageNumber)}
                   className={`w-10 h-10 flex items-center justify-center border font-semibold rounded transition-colors ${
                     currentPage === pageNumber
-                      ? 'bg-gray-900 text-white border-gray-900'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                      ? 'bg-[var(--atlas-accent)] text-[#160e1f] border-[var(--atlas-accent)] shadow-[0_0_18px_rgba(122,247,255,0.22)]'
+                      : 'bg-[rgba(255,255,255,0.58)] text-[var(--atlas-muted)] border-[var(--atlas-line)] hover:bg-[rgba(122,247,255,0.08)]'
                   }`}
                 >
                   {pageNumber}
@@ -255,7 +281,7 @@ export default function GamesList() {
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-            className="p-2 flex items-center gap-1 border border-gray-300 rounded font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="atlas-page-button px-3"
           >
             Next <ChevronRight size={18} />
           </button>
