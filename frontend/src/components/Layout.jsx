@@ -63,10 +63,25 @@ export default function Layout() {
       }
     };
 
+    const onPointerMove = event => {
+      const { innerWidth, innerHeight } = window;
+      const x = (event.clientX / innerWidth) * 100;
+      const y = (event.clientY / innerHeight) * 100;
+      const driftX = ((event.clientX / innerWidth) - 0.5) * 8;
+      const driftY = ((event.clientY / innerHeight) - 0.5) * 8;
+
+      document.documentElement.style.setProperty('--atlas-pointer-x', `${x}%`);
+      document.documentElement.style.setProperty('--atlas-pointer-y', `${y}%`);
+      document.documentElement.style.setProperty('--atlas-drift-x', `${driftX}px`);
+      document.documentElement.style.setProperty('--atlas-drift-y', `${driftY}px`);
+    };
+
     document.addEventListener('mousedown', onDocumentClick);
+    window.addEventListener('pointermove', onPointerMove);
 
     return () => {
       document.removeEventListener('mousedown', onDocumentClick);
+      window.removeEventListener('pointermove', onPointerMove);
     };
   }, []);
 
@@ -104,6 +119,11 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col text-[var(--atlas-ink)]">
+      <div className="atlas-reactive-bg" aria-hidden="true">
+        <div className="atlas-reactive-core" />
+        <div className="atlas-reactive-ring atlas-reactive-ring-cyan" />
+        <div className="atlas-reactive-ring atlas-reactive-ring-pink" />
+      </div>
       <header className="sticky top-0 z-20 border-b border-[var(--atlas-line)] bg-[rgba(13,17,31,0.84)] backdrop-blur-md">
         <div className="atlas-header-glow atlas-header-glow-left" aria-hidden="true" />
         <div className="atlas-header-glow atlas-header-glow-right" aria-hidden="true" />
