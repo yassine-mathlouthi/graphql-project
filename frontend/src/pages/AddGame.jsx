@@ -79,7 +79,7 @@ export default function AddGame() {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+            <label className="block text-sm font-bold text-[var(--atlas-surface)] uppercase tracking-wide mb-2">
               Title
             </label>
             <input
@@ -93,7 +93,7 @@ export default function AddGame() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+              <label className="block text-sm font-bold text-[var(--atlas-surface)] uppercase tracking-wide mb-2">
                 Release Year
               </label>
               <input
@@ -105,7 +105,7 @@ export default function AddGame() {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+              <label className="block text-sm font-bold text-[var(--atlas-surface)] uppercase tracking-wide mb-2">
                 Studio
               </label>
               <select
@@ -125,7 +125,7 @@ export default function AddGame() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+            <label className="block text-sm font-bold text-[var(--atlas-surface)] uppercase tracking-wide mb-2">
               Genres (Comma separated)
             </label>
             <input
@@ -139,7 +139,7 @@ export default function AddGame() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
+            <label className="block text-sm font-bold text-[var(--atlas-surface)] uppercase tracking-wide mb-2">
               Cover Image URL (Optional)
             </label>
             <input

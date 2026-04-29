@@ -105,7 +105,7 @@ export default function GameDetails() {
       <div>
         <Link
           to="/"
-          className="inline-flex items-center text-sm font-bold text-[var(--atlas-muted)] hover:text-[var(--atlas-surface)] transition-colors uppercase tracking-widest gap-2 group mb-8"
+          className="inline-flex items-center text-sm font-bold text-[var(--atlas-glow-soft)] hover:text-[var(--atlas-surface)] transition-colors uppercase tracking-widest gap-2 group mb-8"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           Back to Index
@@ -202,7 +202,7 @@ export default function GameDetails() {
               </span>
               <div>
                 <h2 className="atlas-display text-3xl text-[var(--atlas-ink)]">Community Reviews</h2>
-                <p className="mt-2 text-sm text-[var(--atlas-muted)]">
+                <p className="mt-2 text-sm text-[var(--atlas-surface)]/78">
                   A sharper view of how this game lands with players, from quick reactions to strong verdicts.
                 </p>
               </div>
@@ -210,19 +210,19 @@ export default function GameDetails() {
 
             <div className="grid grid-cols-2 gap-4 md:min-w-[280px]">
               <div className="atlas-info-block">
-                <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[var(--atlas-muted)]">Average</p>
-                <p className="atlas-display mt-2 text-4xl text-[var(--atlas-ink)]">{averageRating || '--'}<span className="text-lg text-[var(--atlas-muted)]">/10</span></p>
+                <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[var(--atlas-glow-soft)]">Average</p>
+                <p className="atlas-display mt-2 text-4xl text-[var(--atlas-surface)]">{averageRating || '--'}<span className="text-lg text-[var(--atlas-glow-soft)]">/10</span></p>
               </div>
               <div className="atlas-info-block">
-                <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[var(--atlas-muted)]">Entries</p>
-                <p className="atlas-display mt-2 text-4xl text-[var(--atlas-ink)]">{game.reviews.length}</p>
+                <p className="text-[11px] uppercase tracking-[0.22em] font-bold text-[var(--atlas-glow-soft)]">Entries</p>
+                <p className="atlas-display mt-2 text-4xl text-[var(--atlas-surface)]">{game.reviews.length}</p>
               </div>
             </div>
           </div>
         </div>
 
         {game.reviews.length === 0 ? (
-          <div className="atlas-panel p-8 text-center text-[var(--atlas-muted)] font-medium italic">
+          <div className="atlas-panel p-8 text-center text-[var(--atlas-surface)]/72 font-medium italic">
             No audits available for this record.
           </div>
         ) : (
@@ -246,7 +246,7 @@ export default function GameDetails() {
                         <Sparkles size={14} />
                         {review.rating}/10
                       </span>
-                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--atlas-muted)]">
+                      <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--atlas-glow-soft)]">
                         {getReviewTone(review.rating)}
                       </span>
                     </div>
@@ -255,7 +255,7 @@ export default function GameDetails() {
                       "{review.comment}"
                     </blockquote>
                   </div>
-                  <span className="text-xs font-mono text-[var(--atlas-muted)] opacity-70">#{review.id}</span>
+                  <span className="text-xs font-mono text-[var(--atlas-glow-soft)] opacity-80">#{review.id}</span>
                 </div>
               </li>
             ))}

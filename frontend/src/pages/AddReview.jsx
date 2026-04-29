@@ -43,7 +43,7 @@ export default function AddReview() {
     <div className="max-w-3xl mx-auto">
       <Link 
         to={`/game/${id}`} 
-        className="inline-flex items-center text-sm font-bold text-[var(--atlas-muted)] hover:text-[var(--atlas-ink)] transition-colors uppercase tracking-widest gap-2 group mb-8"
+        className="inline-flex items-center text-sm font-bold text-[var(--atlas-glow-soft)] hover:text-[var(--atlas-surface)] transition-colors uppercase tracking-widest gap-2 group mb-8"
       >
         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
         Back to Project
@@ -61,22 +61,22 @@ export default function AddReview() {
               </span>
               <div>
                 <h1 className="atlas-display text-4xl text-[var(--atlas-ink)] leading-none">Add Your Verdict</h1>
-                <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--atlas-muted)]">
+                <p className="mt-3 max-w-xl text-sm leading-6 text-[var(--atlas-surface)]/80">
                   Leave a sharp, anonymous take on this game. Score it with stars, then explain what landed or what missed.
                 </p>
               </div>
             </div>
 
             <div className="atlas-info-block min-w-[160px]">
-              <p className="text-[11px] uppercase tracking-[0.24em] font-bold text-[var(--atlas-muted)]">Current score</p>
-              <p className="atlas-display mt-2 text-4xl text-[var(--atlas-ink)]">{formData.rating}<span className="text-lg text-[var(--atlas-muted)]">/10</span></p>
+              <p className="text-[11px] uppercase tracking-[0.24em] font-bold text-[var(--atlas-glow-soft)]">Current score</p>
+              <p className="atlas-display mt-2 text-4xl text-[var(--atlas-surface)]">{formData.rating}<span className="text-lg text-[var(--atlas-glow-soft)]">/10</span></p>
               <p className="mt-1 text-sm font-semibold text-[var(--atlas-accent-deep)]">{ratingLabel}</p>
             </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-8">
-          <div className="rounded-[1.5rem] border border-[var(--atlas-line)] bg-[rgba(255,255,255,0.62)] p-4 text-sm leading-6 text-[var(--atlas-muted)]">
+          <div className="rounded-[1.5rem] border border-[var(--atlas-line)] bg-[rgba(255,255,255,0.08)] p-4 text-sm leading-6 text-[var(--atlas-surface)]/78">
             Reviews are submitted anonymously. You can share feedback without displaying your identity.
           </div>
 
@@ -93,7 +93,7 @@ export default function AddReview() {
                   <label className="atlas-field-label">Star rating</label>
                   <h2 className="atlas-display mt-2 text-2xl text-[var(--atlas-ink)]">Make the stars mean something</h2>
                 </div>
-                <p className="text-sm text-[var(--atlas-muted)]">Tap a star to set a score from 1 to 10.</p>
+                <p className="text-sm text-[var(--atlas-surface)]/75">Tap a star to set a score from 1 to 10.</p>
               </div>
 
               <div className="mt-6 grid grid-cols-5 gap-3 sm:grid-cols-10">

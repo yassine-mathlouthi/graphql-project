@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { Outlet, Link } from 'react-router-dom';
-import { ChevronDown, Shield, LogOut, LogIn, UserRound, UserPlus, Sparkles, KeyRound } from 'lucide-react';
+import { ChevronDown, Shield, LogOut, LogIn, UserRound, UserPlus, Sparkles, KeyRound, X, Eye, EyeOff, Mail, User, BadgeCheck } from 'lucide-react';
 import { LOGIN, REGISTER } from '../graphql/mutations';
 import { clearAuthSession, saveAuthSession } from '../auth/session';
 import { useAuthSession } from '../auth/useAuthSession';
@@ -31,6 +31,7 @@ function AtlasLogo() {
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
+  const [showPassword, setShowPassword] = useState(false);
   const [authForm, setAuthForm] = useState({
     username: '',
     email: '',
@@ -64,15 +65,41 @@ export default function Layout() {
       }
     };
 
+    const onKeyDown = event => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+      }
+    };
+
     document.addEventListener('mousedown', onDocumentClick);
+    document.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.removeEventListener('mousedown', onDocumentClick);
+      document.removeEventListener('keydown', onKeyDown);
     };
   }, []);
 
+  useEffect(() => {
+    setShowPassword(false);
+    setAuthForm(prev => ({
+      ...prev,
+      password: '',
+      ...(authMode === 'login' ? {} : { adminCode: prev.adminCode }),
+    }));
+  }, [authMode]);
+
   const authError = authMode === 'login' ? loginError : registerError;
   const authLoading = authMode === 'login' ? loginLoading : registerLoading;
+  const authTitle = authMode === 'login' ? 'Enter Atlas' : 'Create Access';
+  const authSubtitle = authMode === 'login'
+    ? 'Sign in to manage games, keep your session, and step back into the archive.'
+    : 'Register a local account to unlock your profile and get into the catalog faster.';
+  const authButtonLabel = authLoading
+    ? 'Working...'
+    : authMode === 'login'
+      ? 'Sign In'
+      : 'Create Account';
 
   const handleAuthSubmit = async event => {
     event.preventDefault();
@@ -145,13 +172,23 @@ export default function Layout() {
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 top-14 w-[340px] atlas-panel overflow-hidden">
+              <div className="absolute right-0 top-14 w-[360px] sm:w-[420px] atlas-panel overflow-hidden">
                 <div className="atlas-panel-topper" />
-                <div className="p-5 space-y-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.28em] text-[var(--atlas-muted)] font-semibold">Current Session</p>
-                    <p className="atlas-panel-title mt-2">{userState.user?.username || 'Anonymous browser'}</p>
-                    <p className="text-xs text-[var(--atlas-muted)] mt-1">{userState.user?.email || 'Browse freely or sign in to manage records.'}</p>
+                <div className="p-5 sm:p-6 space-y-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.28em] text-[var(--atlas-muted)] font-semibold">Current Session</p>
+                      <p className="atlas-panel-title mt-2">{userState.user?.username || 'Anonymous browser'}</p>
+                      <p className="text-xs text-[var(--atlas-muted)] mt-1">{userState.user?.email || 'Browse freely or sign in to manage records.'}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setMenuOpen(false)}
+                      className="atlas-icon-button"
+                      aria-label="Close session panel"
+                    >
+                      <X size={15} />
+                    </button>
                   </div>
 
                   <div className="atlas-info-block text-xs space-y-1">
@@ -182,19 +219,30 @@ export default function Layout() {
                       <LogOut size={15} /> Logout
                     </button>
                   ) : (
-                    <>
-                      <div className="grid grid-cols-2 gap-2 rounded-full bg-[rgba(117,92,67,0.08)] p-1">
+                    <div className="atlas-auth-shell">
+                      <div className="atlas-auth-summary">
+                        <span className="atlas-kicker atlas-kicker-tight">
+                          <BadgeCheck size={13} />
+                          Local Session
+                        </span>
+                        <div className="space-y-2">
+                          <h2 className="atlas-auth-title">{authTitle}</h2>
+                          <p className="atlas-auth-copy">{authSubtitle}</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 rounded-full bg-[rgba(255,255,255,0.05)] p-1">
                         <button
                           type="button"
                           onClick={() => setAuthMode('login')}
-                          className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${authMode === 'login' ? 'bg-[var(--atlas-ink)] text-[var(--atlas-surface)]' : 'text-[var(--atlas-muted)]'}`}
+                          className={`atlas-auth-tab ${authMode === 'login' ? 'atlas-auth-tab-active' : ''}`}
                         >
                           <span className="inline-flex items-center gap-2"><LogIn size={14} /> Sign in</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => setAuthMode('register')}
-                          className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${authMode === 'register' ? 'bg-[var(--atlas-ink)] text-[var(--atlas-surface)]' : 'text-[var(--atlas-muted)]'}`}
+                          className={`atlas-auth-tab ${authMode === 'register' ? 'atlas-auth-tab-active' : ''}`}
                         >
                           <span className="inline-flex items-center gap-2"><UserPlus size={14} /> Register</span>
                         </button>
@@ -204,53 +252,73 @@ export default function Layout() {
                         {authMode === 'register' && (
                           <label className="space-y-1 block">
                             <span className="atlas-field-label">Username</span>
-                            <input
-                              type="text"
-                              required
-                              minLength={3}
-                              value={authForm.username}
-                              onChange={event => setAuthForm(prev => ({ ...prev, username: event.target.value }))}
-                              className="atlas-input"
-                              placeholder="atlas-admin"
-                            />
+                            <div className="atlas-auth-input-wrap">
+                              <span className="atlas-auth-input-icon"><User size={16} /></span>
+                              <input
+                                type="text"
+                                required
+                                minLength={3}
+                                value={authForm.username}
+                                onChange={event => setAuthForm(prev => ({ ...prev, username: event.target.value }))}
+                                className="atlas-auth-input"
+                                placeholder="atlas-admin"
+                              />
+                            </div>
                           </label>
                         )}
 
                         <label className="space-y-1 block">
                           <span className="atlas-field-label">Email</span>
-                          <input
-                            type="email"
-                            required
-                            value={authForm.email}
-                            onChange={event => setAuthForm(prev => ({ ...prev, email: event.target.value }))}
-                            className="atlas-input"
-                            placeholder="player@atlas.dev"
-                          />
+                          <div className="atlas-auth-input-wrap">
+                            <span className="atlas-auth-input-icon"><Mail size={16} /></span>
+                            <input
+                              type="email"
+                              required
+                              value={authForm.email}
+                              onChange={event => setAuthForm(prev => ({ ...prev, email: event.target.value }))}
+                              className="atlas-auth-input"
+                              placeholder="player@atlas.dev"
+                            />
+                          </div>
                         </label>
 
                         <label className="space-y-1 block">
                           <span className="atlas-field-label">Password</span>
-                          <input
-                            type="password"
-                            required
-                            minLength={8}
-                            value={authForm.password}
-                            onChange={event => setAuthForm(prev => ({ ...prev, password: event.target.value }))}
-                            className="atlas-input"
-                            placeholder="At least 8 characters"
-                          />
+                          <div className="atlas-auth-input-wrap">
+                            <span className="atlas-auth-input-icon"><KeyRound size={16} /></span>
+                            <input
+                              type={showPassword ? 'text' : 'password'}
+                              required
+                              minLength={8}
+                              value={authForm.password}
+                              onChange={event => setAuthForm(prev => ({ ...prev, password: event.target.value }))}
+                              className="atlas-auth-input"
+                              placeholder="At least 8 characters"
+                            />
+                            <button
+                              type="button"
+                              className="atlas-auth-input-toggle"
+                              onClick={() => setShowPassword(prev => !prev)}
+                              aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            >
+                              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                          </div>
                         </label>
 
                         {authMode === 'register' && (
                           <label className="space-y-1 block">
                             <span className="atlas-field-label">Admin invite code</span>
-                            <input
-                              type="text"
-                              value={authForm.adminCode}
-                              onChange={event => setAuthForm(prev => ({ ...prev, adminCode: event.target.value }))}
-                              className="atlas-input"
-                              placeholder="Optional"
-                            />
+                            <div className="atlas-auth-input-wrap">
+                              <span className="atlas-auth-input-icon"><Shield size={16} /></span>
+                              <input
+                                type="text"
+                                value={authForm.adminCode}
+                                onChange={event => setAuthForm(prev => ({ ...prev, adminCode: event.target.value }))}
+                                className="atlas-auth-input"
+                                placeholder="Optional"
+                              />
+                            </div>
                           </label>
                         )}
 
@@ -272,10 +340,10 @@ export default function Layout() {
                           className="atlas-primary-button w-full justify-center"
                         >
                           <KeyRound size={15} />
-                          {authLoading ? 'Working...' : authMode === 'login' ? 'Enter Atlas' : 'Create Account'}
+                          {authButtonLabel}
                         </button>
                       </form>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
