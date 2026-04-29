@@ -47,3 +47,15 @@ export const GET_STUDIOS = gql`
     }
   }
 `;
+
+export const GET_ME = gql`
+  query GetMe {
+    me {
+      id
+      username
+      email
+      roles
+      isAdmin
+    }
+  }
+`;

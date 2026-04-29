@@ -4,13 +4,13 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { GET_GAME } from '../graphql/queries';
 import { REVIEW_ADDED } from '../graphql/subscriptions';
 import { DELETE_GAME, UPDATE_GAME } from '../graphql/mutations';
-import { getKeycloakUserState } from '../auth/keycloakUser';
 import { ArrowLeft, Star, MessageSquare, Trash2, PencilLine, Save, X } from 'lucide-react';
+import { useAuthSession } from '../auth/useAuthSession';
 
 export default function GameDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isAdmin } = getKeycloakUserState();
+  const { isAdmin } = useAuthSession();
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState({ title: '', year: '' });
 
@@ -199,15 +199,18 @@ export default function GameDetails() {
               <li key={review.id} className="p-6 transition-colors hover:bg-gray-50">
                 <div className="flex items-start justify-between">
                   <div>
-                    <div className="flex text-yellow-500 mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={18}
-                          fill={i < review.rating ? 'currentColor' : 'transparent'}
-                          className={i < review.rating ? 'text-yellow-500' : 'text-gray-300'}
-                        />
-                      ))}
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="flex text-yellow-500">
+                        {[...Array(10)].map((_, i) => (
+                          <Star
+                            key={i}
+                            size={16}
+                            fill={i < review.rating ? 'currentColor' : 'transparent'}
+                            className={i < review.rating ? 'text-yellow-500' : 'text-gray-300'}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm font-bold text-gray-700">{review.rating}/10</span>
                     </div>
                     <p className="text-gray-800 leading-relaxed font-medium">"{review.comment}"</p>
                   </div>

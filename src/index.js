@@ -37,10 +37,7 @@ function buildAuthContextFromToken(token) {
   }
 
   return verifyToken(token).then(user => {
-    const realmRoles = user?.realm_access?.roles || [];
-    const clientRoles = Object.values(user?.resource_access || {})
-      .flatMap(client => client?.roles || []);
-    const roles = Array.from(new Set([...realmRoles, ...clientRoles]));
+    const roles = Array.isArray(user?.roles) ? user.roles : [];
 
     return {
       user,
@@ -73,7 +70,6 @@ const serverCleanup = useServer({
 const server = new ApolloServer({
   schema,
   context: async ({ req }) => {
-    // On autorise la requête locale d'introspection pour que le playground Apollo fonctionne
     if (req?.body?.operationName === 'IntrospectionQuery') {
       return { user: null, roles: [], isAdmin: false };
     }

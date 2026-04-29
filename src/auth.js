@@ -1,35 +1,70 @@
-// src/auth.js
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
 
-// Correspond au Realm que vous avez créé dans Keycloak
-const KEYCLOAK_ISSUER = 'http://localhost:8080/realms/graphql-realm';
+const AUTH_JWT_SECRET = process.env.AUTH_JWT_SECRET || 'atlas-dev-secret-change-me';
+const TOKEN_EXPIRY = '7d';
+const PBKDF2_ITERATIONS = 100000;
+const PBKDF2_KEY_LENGTH = 64;
+const PBKDF2_DIGEST = 'sha512';
 
-const client = jwksClient({
-  jwksUri: `${KEYCLOAK_ISSUER}/protocol/openid-connect/certs`,
-});
+function createPasswordSalt() {
+  return crypto.randomBytes(16).toString('hex');
+}
 
-function getKey(header, callback) {
-  client.getSigningKey(header.kid, function (err, key) {
-    if (err) return callback(err, null);
-    const signingKey = key.getPublicKey();
-    callback(null, signingKey);
-  });
+function hashPassword(password, salt = createPasswordSalt()) {
+  const passwordHash = crypto
+    .pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH, PBKDF2_DIGEST)
+    .toString('hex');
+
+  return { passwordHash, passwordSalt: salt };
+}
+
+function verifyPassword(password, passwordSalt, passwordHash) {
+  const attemptedHash = crypto
+    .pbkdf2Sync(password, passwordSalt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH, PBKDF2_DIGEST)
+    .toString('hex');
+
+  return crypto.timingSafeEqual(Buffer.from(attemptedHash, 'hex'), Buffer.from(passwordHash, 'hex'));
+}
+
+function toSafeUser(user) {
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user._id.toString(),
+    username: user.username,
+    email: user.email,
+    roles: Array.isArray(user.roles) ? user.roles : [],
+    isAdmin: Array.isArray(user.roles) && user.roles.includes('admin'),
+  };
+}
+
+function signToken(user) {
+  const safeUser = toSafeUser(user);
+
+  return jwt.sign(
+    {
+      id: safeUser.id,
+      sub: safeUser.id,
+      username: safeUser.username,
+      email: safeUser.email,
+      roles: safeUser.roles,
+    },
+    AUTH_JWT_SECRET,
+    { expiresIn: TOKEN_EXPIRY }
+  );
 }
 
 function verifyToken(token) {
-  return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      getKey,
-      { algorithms: ['RS256'], issuer: KEYCLOAK_ISSUER },
-      (err, decoded) => {
-        if (err) reject(err);
-        else resolve(decoded);
-      }
-    );
-  });
+  return Promise.resolve(jwt.verify(token, AUTH_JWT_SECRET));
 }
 
-module.exports = { verifyToken };
-
+module.exports = {
+  hashPassword,
+  signToken,
+  toSafeUser,
+  verifyPassword,
+  verifyToken,
+};

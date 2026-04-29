@@ -61,7 +61,7 @@ export default function AddReview() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-bold text-gray-700 uppercase tracking-wide mb-2">
-                Rating (1-5)
+                Rating (1-10)
               </label>
               <select
                 required
@@ -69,7 +69,7 @@ export default function AddReview() {
                 value={formData.rating}
                 onChange={(e) => setFormData(prev => ({ ...prev, rating: e.target.value }))}
               >
-                {[1, 2, 3, 4, 5].map(num => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                   <option key={num} value={num}>{num}</option>
                 ))}
               </select>
