@@ -58,9 +58,9 @@ export default function GamesList() {
 
   if (loading && !currentData) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(9)].map((_, i) => (
-          <div key={i} className="h-44 bg-gray-200 border border-gray-300 rounded" />
+          <div key={i} className="h-44 atlas-loading-card" />
         ))}
       </div>
     );
@@ -81,6 +81,9 @@ export default function GamesList() {
     <div className="space-y-8 pb-10">
       <section className="atlas-hero-panel overflow-hidden">
         <div className="atlas-hero-grid" />
+        <div className="atlas-hero-orb atlas-hero-orb-cyan" aria-hidden="true" />
+        <div className="atlas-hero-orb atlas-hero-orb-pink" aria-hidden="true" />
+        <div className="atlas-hero-scanline" aria-hidden="true" />
         <div className="relative p-6 md:p-8 lg:p-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl space-y-4">
             <span className="atlas-kicker">
@@ -197,18 +200,19 @@ export default function GamesList() {
           <Link 
             key={game.id} 
             to={`/game/${game.id}`}
-            className="group atlas-game-card flex flex-col"
+            className="group atlas-game-card atlas-card-reveal flex flex-col"
+            style={{ animationDelay: `${(Number.parseInt(game.id.slice(-2), 16) % 9) * 45}ms` }}
           >
             {game.imageUrl ? (
               <img 
                 src={game.imageUrl} 
                 alt={game.title} 
-                className="w-full aspect-[4/3] object-cover border-b border-[rgba(255,255,255,0.08)]"
+                className="w-full aspect-[4/3] object-cover border-b border-[rgba(255,255,255,0.08)] atlas-game-card-image"
               />
             ) : (
               <div className="w-full aspect-[4/3] atlas-game-card-fallback">
                 <div className="text-center">
-                  <Trophy size={28} className="mx-auto mb-3 text-[var(--atlas-accent)]" />
+                  <Trophy size={28} className="mx-auto mb-3 text-[var(--atlas-accent)] atlas-float-soft" />
                   <span className="text-sm font-semibold uppercase tracking-widest text-[var(--atlas-muted)]">No Key Art</span>
                 </div>
               </div>

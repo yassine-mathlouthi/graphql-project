@@ -51,6 +51,16 @@ body::before {
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 95%);
 }
 
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  background: linear-gradient(180deg, transparent, rgba(122, 247, 255, 0.045), transparent);
+  animation: atlasScanSweep 8s linear infinite;
+}
+
 a {
   color: inherit;
 }
@@ -95,6 +105,10 @@ a {
   backdrop-filter: blur(18px);
 }
 
+.atlas-page-enter {
+  animation: atlasPageRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 .atlas-panel-topper {
   height: 4px;
   background: linear-gradient(90deg, var(--atlas-magenta), var(--atlas-accent), #8d7dff);
@@ -123,6 +137,28 @@ a {
   background: rgba(122, 247, 255, 0.08);
   border-color: rgba(122, 247, 255, 0.3);
   transform: translateY(-1px);
+}
+
+.atlas-header-glow {
+  position: absolute;
+  top: 0;
+  width: 14rem;
+  height: 100%;
+  pointer-events: none;
+  filter: blur(34px);
+  opacity: 0.3;
+  animation: atlasPulseGlow 6s ease-in-out infinite;
+}
+
+.atlas-header-glow-left {
+  left: 5%;
+  background: radial-gradient(circle, rgba(122, 247, 255, 0.26), transparent 65%);
+}
+
+.atlas-header-glow-right {
+  right: 5%;
+  background: radial-gradient(circle, rgba(255, 77, 166, 0.2), transparent 65%);
+  animation-delay: 1.5s;
 }
 
 .atlas-action-chip {
@@ -315,6 +351,40 @@ a {
   mask-image: radial-gradient(circle at center, black, transparent 92%);
 }
 
+.atlas-hero-orb {
+  position: absolute;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 999px;
+  filter: blur(8px);
+  opacity: 0.3;
+  pointer-events: none;
+  animation: atlasOrbFloat 12s ease-in-out infinite;
+}
+
+.atlas-hero-orb-cyan {
+  left: -4rem;
+  top: -3rem;
+  background: radial-gradient(circle, rgba(122, 247, 255, 0.28), transparent 65%);
+}
+
+.atlas-hero-orb-pink {
+  right: -3rem;
+  bottom: -4rem;
+  background: radial-gradient(circle, rgba(255, 77, 166, 0.24), transparent 65%);
+  animation-delay: 2s;
+}
+
+.atlas-hero-scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  background: linear-gradient(180deg, transparent 0%, rgba(122, 247, 255, 0.08) 50%, transparent 100%);
+  transform: translateY(-120%);
+  animation: atlasSweepDown 7s linear infinite;
+}
+
 .atlas-kicker {
   display: inline-flex;
   align-items: center;
@@ -385,6 +455,15 @@ a {
   box-shadow: 0 30px 72px -40px rgba(122, 247, 255, 0.18);
 }
 
+.atlas-game-card:hover .atlas-game-card-image {
+  transform: scale(1.035);
+  filter: saturate(1.08) contrast(1.05);
+}
+
+.atlas-game-card-image {
+  transition: transform 260ms ease, filter 260ms ease;
+}
+
 .atlas-game-card-fallback {
   display: flex;
   align-items: center;
@@ -438,6 +517,21 @@ a {
   font-weight: 700;
 }
 
+.atlas-card-reveal {
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  animation: atlasCardReveal 640ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.atlas-loading-card {
+  border: 1px solid rgba(122, 247, 255, 0.12);
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.04), rgba(122,247,255,0.12), rgba(255,255,255,0.04));
+  background-size: 220% 100%;
+  animation: atlasShimmer 1.4s linear infinite;
+}
+
 .atlas-detail-hero {
   display: flex;
   flex-direction: column;
@@ -451,9 +545,64 @@ a {
   box-shadow: 0 30px 80px -44px rgba(0,0,0,0.92);
 }
 
+.atlas-float-soft {
+  animation: atlasFloatSoft 5.5s ease-in-out infinite;
+}
+
 @media (min-width: 768px) {
   .atlas-detail-hero {
     flex-direction: row;
     align-items: flex-start;
+  }
+}
+
+@keyframes atlasPulseGlow {
+  0%, 100% { opacity: 0.18; transform: scale(0.96); }
+  50% { opacity: 0.34; transform: scale(1.05); }
+}
+
+@keyframes atlasOrbFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(1rem, 1.2rem, 0) scale(1.08); }
+}
+
+@keyframes atlasSweepDown {
+  0% { transform: translateY(-120%); }
+  100% { transform: translateY(120%); }
+}
+
+@keyframes atlasScanSweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes atlasPageRise {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes atlasCardReveal {
+  0% { opacity: 0; transform: translateY(18px) scale(0.985); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes atlasShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -20% 0; }
+}
+
+@keyframes atlasFloatSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

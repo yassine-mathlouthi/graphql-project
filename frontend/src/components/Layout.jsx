@@ -105,9 +105,11 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col text-[var(--atlas-ink)]">
       <header className="sticky top-0 z-20 border-b border-[var(--atlas-line)] bg-[rgba(13,17,31,0.84)] backdrop-blur-md">
+        <div className="atlas-header-glow atlas-header-glow-left" aria-hidden="true" />
+        <div className="atlas-header-glow atlas-header-glow-right" aria-hidden="true" />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 min-h-20 flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="atlas-brand-mark group-hover:translate-y-[-1px] transition-transform">
+            <div className="atlas-brand-mark atlas-float-soft group-hover:translate-y-[-1px] transition-transform">
               <AtlasLogo />
             </div>
             <div>
@@ -280,7 +282,7 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 atlas-page-enter">
         <Outlet />
       </main>
 
